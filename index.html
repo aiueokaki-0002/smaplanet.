@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>スマホ・ネット代の見直しチェック v2（試作）</title>
+<style>
+:root{
+--bg:#eef2f5; --card:#ffffff; --ink:#1d2a38; --navy:#16324f; --teal:#0f766e;
+--teal-dark:#0b5a54; --accent:#f59e0b; --soft:#e6f4f1; --warn:#fdf3e3;
+--line:#d7dee5; --muted:#5b6b7a; --radius:14px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Noto Sans JP",sans-serif;line-height:1.7}
+.wrap{max-width:760px;margin:0 auto;padding:20px 14px 60px}
+header.top{background:var(--navy);color:#fff;border-radius:var(--radius);padding:22px 20px;margin-bottom:16px}
+header.top h1{margin:0 0 6px;font-size:22px}
+header.top p{margin:0;font-size:13.5px;opacity:.92}
+.badge{display:inline-block;background:var(--accent);color:#3a2a00;font-weight:700;font-size:12px;border-radius:999px;padding:2px 10px;margin-bottom:8px}
+section.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:14px}
+section.card h2{margin:0 0 4px;font-size:17px;color:var(--navy)}
+section.card.sub{margin:0 0 12px;font-size:13px;color:var(--muted)}
+.checks label,.radios label{display:flex;gap:10px;align-items:flex-start;padding:9px 10px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;cursor:pointer;font-size:14.5px;background:#fbfcfd}
+.checks input,.radios input{margin-top:5px;transform:scale(1.15)}
+.app-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px dashed var(--line);font-size:14.5px}
+.app-row:last-child{border-bottom:none}
+select,input[type="number"]{font-size:15px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+input[type="number"]{width:160px}
+.field{margin-bottom:14px}
+.field.lab{font-weight:700;font-size:14.5px;display:block;margin-bottom:6px}
+.estimate{background:#eaf2fb;border:1px solid #c9dcf5;border-radius:10px;padding:12px;font-size:14.5px;margin-top:10px}
+.estimate.big{font-size:20px;font-weight:800;color:var(--navy)}
+button.main{width:100%;background:var(--teal);color:#fff;border:none;border-radius:12px;padding:16px;font-size:17px;font-weight:800;cursor:pointer}
+button.main:hover{background:var(--teal-dark)}
+button.subbtn{background:#fff;border:2px solid var(--teal);color:var(--teal-dark);border-radius:10px;padding:8px 14px;font-weight:700;cursor:pointer;font-size:14px}
+#result{display:none;margin-top:16px}
+.pick{background:var(--soft);border:2px solid var(--teal);border-radius:var(--radius);padding:18px;margin-bottom:12px}
+.pick.tag{font-size:12px;font-weight:800;color:var(--teal-dark);letter-spacing:.05em}
+.pick h3{margin:4px 0 6px;font-size:20px;color:var(--navy)}
+.pick.price{font-size:26px;font-weight:800}
+.pick.save{color:#b45309;font-weight:800}
+.alt{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:14px 18px;margin-bottom:12px}
+.note-card{background:#fff;border:1px solid var(--line);border-left:6px solid var(--accent);border-radius:10px;padding:12px 14px;margin-bottom:10px}
+.note-card h4{margin:0 0 4px;font-size:15px}
+.note-card p{margin:0;font-size:14px}
+table.cmp{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0}
+table.cmp th,table.cmp td{border:1px solid var(--line);padding:7px 9px;text-align:left}
+table.cmp th{background:#f2f6f9}
+ol.steps{margin:6px 0 0;padding-left:22px;font-size:14.5px}
+ol.steps li{margin-bottom:6px}
+.foot{font-size:12.5px;color:var(--muted);margin-top:18px}
+.hidden{display:none}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+@media print{
+body{background:#fff}
+header.top,section.card,button.main,.btnrow{display:none!important}
+#result{display:block!important}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+<span class="badge">改良版 v2 試作（有料版相当）</span>
+<h1>スマホ・ネット代の見直しチェック</h1>
+<p>使い方と契約の状況から、あなたに合う具体的なプランを1つ選び、通話料込みの月額と、いまとの差額をお見せします。入力内容は保存されず、この画面の中だけで使われます。</p>
+</header>
+
+<section class="card">
+<h2>1. 乗り換えで困りやすいこと（当てはまるもの）</h2>
+<p class="sub">あとから「知らなかった」になりやすい項目です。結果に個別の注意点として表示されます。</p>
+<div class="checks" id="pitfalls">
+<label><input type="checkbox" value="mail">キャリアのメールアドレス（@docomo.ne.jp など）をよく使っている</label>
+<label><input type="checkbox" value="pay">キャリア決済（スマホ代と一緒に支払う決済）を使っている</label>
+<label><input type="checkbox" value="device">端末代の分割払いが残っている</label>
+<label><input type="checkbox" value="set">家族割や、光回線・でんきとのセット割が付いている</label>
+<label><input type="checkbox" value="term">契約期間の縛りや、更新月がある</label>
+<label><input type="checkbox" value="sms">SMS認証（2段階認証）を使うサービスが多い</label>
+<label><input type="checkbox" value="store">店舗での対面サポートに頼りたい</label>
+</div>
+</section>
+
+<section class="card">
+<h2>2. アプリの使い方から、データ量の目安を出す</h2>
+<p class="sub">契約者ページで使用量を見られない人向けです。外出先でモバイル回線を使う分だけで選んでください（自宅Wi-Fiの分は入れません）。<br>
+ときどき＝外出先で月 約5時間／よく使う＝月 約15時間 として、用途ごとの1時間あたりの目安で計算します。</p>
+<div id="apps"></div>
+<div class="estimate" id="estimateBox">アプリを選ぶと、ここに目安が出ます。</div>
+<div class="btnrow"><button type="button" class="subbtn" id="applyEstimate" disabled>この目安を「月のデータ使用量」に使う</button></div>
+</section>
+
+<section class="card">
+<h2>3. いまの使い方</h2>
+<div class="field">
+<span class="lab">月のデータ使用量</span>
+<select id="dataSel">
+<option value="unknown">分からない（10〜20GBとして計算）</option>
+<option value="3">3GBまで</option>
+<option value="10">3〜10GBくらい</option>
+<option value="20">10〜20GBくらい</option>
+<option value="30">20〜30GBくらい</option>
+<option value="50">30GB超・無制限希望</option>
+</select>
+</div>
+<div class="field">
+<span class="lab">通話（普通の電話をかける量）</span>
+<select id="callSel">
+<option value="none">ほとんどしない（LINE通話が中心）</option>
+<option value="some">たまにする（短い電話が月に何回か）</option>
+<option value="many">よくする（仕事や家族と長めに話す）</option>
+</select>
+</div>
+<div class="field">
+<span class="lab">いまのスマホ代（月額）</span>
+<input type="number" id="feeInput" inputmode="numeric" placeholder="例：6500"> 円
+<p class="sub" style="margin-top:6px">端末代の分割払いは除いた、通信料とオプションの合計で入れてください。空欄でも使えます。</p>
+</div>
+<div class="field">
+<span class="lab">一番大事にしたいこと</span>
+<div class="radios" id="priority">
+<label><input type="radio" name="prio" value="cheap" checked>とにかく安くしたい</label>
+<label><input type="radio" name="prio" value="quality">通信の安定や速さも大事にしたい</label>
+<label><input type="radio" name="prio" value="store">店舗などの対面サポートがほしい</label>
+<label><input type="radio" name="prio" value="mail">キャリアメールや今のサービスを続けたい</label>
+</div>
+</div>
+</section>
+
+<section class="card">
+<h2>4. 自宅のネット回線</h2>
+<div class="field">
+<span class="lab">回線の種類</span>
+<select id="homeSel">
+<option value="none">自宅の回線は使っていない</option>
+<option value="hikari">光回線</option>
+<option value="router">ホームルーター（置くだけWi-Fi）</option>
+<option value="unknown">分からない</option>
+</select>
+</div>
+<div id="homeChecksWrap" class="hidden">
+<p class="sub">自宅回線で当てはまるものを選んでください。</p>
+<div class="checks" id="homePitfalls">
+<label><input type="checkbox" value="home_fee">解約・乗り換えると、工事費の残りや違約金がありそう</label>
+<label><input type="checkbox" value="home_rental">回線の機器（ルーター・ONUなど）をレンタルしている</label>
+<label><input type="checkbox" value="home_mail">プロバイダーのメールアドレスを使っている</label>
+<label><input type="checkbox" value="home_move">1〜2年のうちに引っ越す予定がある</label>
+<label><input type="checkbox" value="home_slow">今の自宅回線の速度や安定性に不満がある</label>
+</div>
+</div>
+</section>
+
+<button type="button" class="main" id="runBtn">チェック結果を見る</button>
+
+<div id="result"></div>
+
+<p class="foot">
+料金は2026年10月に公開情報で確認した税込・割引前の基本料金です（実装前に各社公式で再確認します）。キャンペーン価格は含みません。節約額は目安で、保証するものではありません。申込前に必ず各社の公式サイトで最新の料金と条件を確認してください。<br>
+ahamoは2026年12月1日から段階制（〜40GB 3,135円／〜60GB 4,125円／〜120GB 5,115円）に改定予定のため、このツールのahamo料金は改定前のものです。
+</p>
+
+</div>
+
+<script>
+"use strict";
+/* ===== データ量の目安：1時間あたりGB（原案の定義表） ===== */
+const APPS = [
+  {key:"video",  name:"YouTube・動画配信（Netflixなど）", rate:1.1},
+  {key:"short",  name:"TikTok・Instagramリール・YouTubeショート", rate:0.7},
+  {key:"sns",    name:"X・Instagram・Facebookなどの閲覧", rate:0.2},
+  {key:"line",   name:"LINE（トーク・通話）", rate:0.05},
+  {key:"music",  name:"音楽配信（Spotifyなど）", rate:0.14},
+  {key:"game",   name:"ゲームアプリ", rate:0.3},
+  {key:"map",    name:"地図・ナビ", rate:0.02},
+  {key:"web",    name:"ネット検索・ニュース", rate:0.15},
+  {key:"meeting",name:"ビデオ会議（Zoomなど）", rate:1.0}
+];
+const HOURS = {none:0, some:5, many:15};
+
+/* ===== プランDB（2026年10月確認・税込・割引前） =====
+   price(gb): その容量が収まる月額基本料。収まらなければ null
+   callAdd(level, gb): 通話の目安加算。null は候補から外す */
+const PLANS = [
+  { id:"iijmio", name:"IIJmio ギガプラン", kind:"mvno",
+    price(gb){ const t=[[2,850],[5,950],[10,1400],[15,1600],[25,2000],[35,2400],[45,3300],[55,3900]]; for(const [c,p] of t){ if(gb<=c) return {fee:p, cap:c}; } return null; },
+    callAdd(lv){ return lv==="many"?1400 : lv==="some"?500 : 0; },
+    callNote:"通話料11円/30秒。定額は5分500円／かけ放題+ 1,400円",
+    why:"容量の刻みが細かく、ムダのないプランを選びやすい格安SIM",
+    url:"https://www.iijmio.jp/" },
+  { id:"mineo", name:"mineo マイピタ", kind:"mvno",
+    price(gb){ const t=[[1,1298],[5,1518],[10,1958],[20,2178],[50,2948]]; for(const [c,p] of t){ if(gb<=c) return {fee:p, cap:c}; } return null; },
+    callAdd(lv){ return lv==="many"? null : 0; },
+    callNote:"専用アプリ利用で通話料が割引。電話をよくかける人は別途定額の確認を",
+    why:"ドコモ・au・ソフトバンクの3回線から選べる格安SIM",
+    url:"https://mineo.jp/" },
+  { id:"linemo", name:"LINEMO", kind:"online",
+    price(gb){ if(gb<=3) return {fee:990,cap:3,plan:"ベストプラン"}; if(gb<=10) return {fee:2090,cap:10,plan:"ベストプラン"}; if(gb<=30) return {fee:2970,cap:30,plan:"ベストプランV"}; return null; },
+    callAdd(lv,gb){ const v = gb>10; if(lv==="many") return v?1100:1650; if(lv==="some") return v?0:550; return 0; },
+    callNote:"ベストプランVは5分定額込み。LINEギガフリーあり",
+    why:"ソフトバンク回線そのままのオンライン専用プラン",
+    url:"https://www.linemo.jp/" },
+  { id:"povo", name:"povo2.0", kind:"online",
+    price(gb){ if(gb<=3) return {fee:990,cap:3}; if(gb<=5) return {fee:1380,cap:5}; if(gb<=30) return {fee:2780,cap:30}; return {fee:Math.ceil(gb/30)*2780, cap:Math.ceil(gb/30)*30}; },
+    callAdd(lv){ return lv==="many"?1650 : lv==="some"?550 : 0; },
+    callNote:"基本料0円＋データトッピング制。180日以上トッピング購入がないと利用停止の恐れ",
+    why:"使う月だけ買う方式。月ごとの使用量に波がある人向き",
+    url:"https://povo.jp/" },
+  { id:"ahamo", name:"ahamo", kind:"online",
+    price(gb){ if(gb<=30) return {fee:2970,cap:30}; if(gb<=110) return {fee:4950,cap:110,plan:"大盛り"}; return null; },
+    callAdd(lv){ return lv==="many"?1100:0; },
+    callNote:"5分以内の国内通話は標準で無料。★2026年12月1日から段階制に改定予定（本文下部の注記参照）",
+    why:"ドコモ回線そのまま、30GBまで一律料金のシンプルさ",
+    url:"https://ahamo.com/" },
+  { id:"rakuten", name:"楽天モバイル Rakuten最強プラン", kind:"carrier",
+    price(gb){ if(gb<=3) return {fee:1078,cap:3}; if(gb<=20) return {fee:2178,cap:20}; return {fee:3278,cap:Infinity}; },
+    callAdd(){ return 0; },
+    callNote:"Rakuten Linkアプリ利用で国内通話無料（一部対象外番号あり）。エリアは申込前に公式マップで確認を",
+    why:"使った量で自動的に3段階。20GB超は無制限で同額",
+    url:"https://network.mobile.rakuten.co.jp/" },
+  { id:"uq", name:"UQ mobile トクトクプラン2", kind:"subbrand",
+    price(gb){ if(gb<=5) return {fee:2948,cap:5}; if(gb<=30) return {fee:4048,cap:30}; return null; },
+    callAdd(){ return 0; },
+    callNote:"店舗サポートあり。通話定額オプション料は含んでいないため、店舗・公式で確認を",
+    why:"auのサブブランドで、店舗でも相談できる",
+    url:"https://www.uqwimax.jp/mobile/" },
+  { id:"ymobile", name:"ワイモバイル シンプル3", kind:"subbrand",
+    price(gb){ if(gb<=5) return {fee:3278,cap:5,plan:"S"}; if(gb<=30) return {fee:4378,cap:30,plan:"M"}; if(gb<=35) return {fee:5478,cap:35,plan:"L（10分定額込み）"}; return null; },
+    callAdd(){ return 0; },
+    callNote:"店舗サポートあり。通話定額オプション料は含んでいないため、店舗・公式で確認を（Lは10分定額込み）",
+    why:"ソフトバンクのサブブランドで、店舗でも相談できる",
+    url:"https://www.ymobile.jp/" }
+];
+
+const PITFALL_NOTES = {
+  mail:["キャリアメールが使えなくなる","乗り換えると今のキャリアメールは原則使えなくなります。銀行・学校・各種登録の連絡先に使っていないか、乗り換え前に洗い出してください。有料の「持ち運び」サービスで残せる場合もあります。"],
+  pay:["キャリア決済の支払いが変わる","動画・音楽などのサブスクをキャリア決済で払っていると、解約と同時に支払いが止まるものがあります。乗り換え前にクレジットカード等へ支払い方法を変えてください。"],
+  device:["端末の残債（残りの支払い）","回線を解約しても端末の分割払いは続きます。残額と月々の支払額を契約ページで確認し、乗り換え後の合計で判断してください。"],
+  set:["割引がなくなる・家族への影響","家族割やセット割は、割引額そのものは月1,100〜1,650円程度のことが多く、基本料の差（数千円）より小さいケースが大半です。ただし家族の誰かが割引条件から外れると家族全員の料金に影響するため、順番には注意してください。"],
+  term:["更新月と解除料","縛りがある契約は、更新月以外だと解除料がかかる場合があります。乗り換える月を1〜2か月ずらすだけで済むこともあるので、先に更新月を確認してください。"],
+  sms:["SMS認証の受け取り先","電話番号が変わらないMNPならSMS認証は基本そのまま使えます。ただし乗り換え作業中は一時的に届かない時間帯があるため、大事な手続きは乗り換え当日を避けてください。"],
+  store:["サポート体制の違い","オンライン専用プランと格安SIMは、店舗での対面サポートが原則ありません（あっても有料の場合）。困ったときに自分で調べられるかが判断の分かれ目です。"],
+  home_fee:["自宅回線の解約費用","工事費の残債や違約金は、更新月なら0円になる場合があります。スマホと別に、自宅回線側の更新月も確認してください。"],
+  home_rental:["レンタル機器の返却","ルーターやONUのレンタルは、解約後に返却しないと費用がかかる場合があります。返却方法と期日を解約手続きのときに確認してください。"],
+  home_mail:["プロバイダーメールが使えなくなる","プロバイダーのメールは解約で使えなくなるのが原則です。残したい場合はメールだけ残すコースがあるか確認してください。"],
+  home_move:["引っ越し予定がある場合","引っ越し先で同じ回線が使えるか、移転費用はいくらかで判断が変わります。引っ越しが近い場合は、自宅回線の乗り換えは引っ越しと同時が効率的です。"],
+  home_slow:["不満の原因を先に切り分ける","速度の不満は、回線自体ではなくルーターの古さや置き場所が原因のことも多いです。乗り換え前にルーター再起動と設置場所の見直しを試してください。"]
+};
+
+/* ===== アプリ目安UI ===== */
+const appsEl = document.getElementById("apps");
+APPS.forEach(a=>{
+  const row=document.createElement("div"); row.className="app-row";
+  row.innerHTML = `<span>${a.name}</span>`;
+  const sel=document.createElement("select"); sel.dataset.key=a.key; sel.dataset.rate=a.rate;
+  sel.innerHTML = `<option value="none">使わない</option><option value="some">ときどき（月約5時間）</option><option value="many">よく使う（月約15時間）</option>`;
+  sel.addEventListener("change", updateEstimate);
+  row.appendChild(sel); appsEl.appendChild(row);
+});
+let estimateGB = null;
+function updateEstimate(){
+  let total=0; const parts=[];
+  appsEl.querySelectorAll("select").forEach(s=>{
+    const h=HOURS[s.value]; if(h>0){ const gb=h*parseFloat(s.dataset.rate); total+=gb; parts.push(`${s.previousSibling.textContent.split("・")[0]} 約${(Math.round(gb*2)/2)}GB`); }
+  });
+  const box=document.getElementById("estimateBox");
+  const btn=document.getElementById("applyEstimate");
+  if(total<=0){ estimateGB=null; box.textContent="アプリを選ぶと、ここに目安が出ます。"; btn.disabled=true; return; }
+  estimateGB = Math.round(total*2)/2;
+  box.innerHTML = `月に約 <span class="big">${estimateGB}GB</span> が目安です。<br><span style="font-size:13px;color:#5b6b7a">内訳：${parts.join("／")}。外出先のモバイル回線だけの概算です。契約者ページで実量を確認できるなら、そちらが正確です。</span>`;
+  btn.disabled=false;
+}
+document.getElementById("applyEstimate").addEventListener("click", ()=>{
+  if(estimateGB===null) return;
+  const sel=document.getElementById("dataSel");
+  sel.value = estimateGB<=3 ? "3" : estimateGB<=10 ? "10" : estimateGB<=20 ? "20" : estimateGB<=30 ? "30" : "50";
+});
+
+/* ===== 自宅回線チェックの表示切替 ===== */
+const homeSel=document.getElementById("homeSel");
+homeSel.addEventListener("change", ()=>{
+  document.getElementById("homeChecksWrap").classList.toggle("hidden", homeSel.value==="none");
+});
+
+/* ===== 診断 ===== */
+function yen(n){ return n.toLocaleString("ja-JP")+"円"; }
+document.getElementById("runBtn").addEventListener("click", ()=>{
+  const gbCap = {unknown:20,"3":3,"10":10,"20":20,"30":30,"50":50}[document.getElementById("dataSel").value];
+  const callLv = document.getElementById("callSel").value;
+  const feeRaw = document.getElementById("feeInput").value.trim();
+  const fee = feeRaw==="" ? null : Number(feeRaw);
+  const prio = document.querySelector("input[name='prio']:checked").value;
+  const checked = [...document.querySelectorAll("#pitfalls input:checked, #homePitfalls input:checked")].map(i=>i.value);
+  if(checked.includes("store") && prio==="cheap"){ /* 店舗希望チェックがあれば店舗優先に寄せる */ }
+
+  let pool = PLANS.slice();
+  if(prio==="quality") pool = pool.filter(p=>p.kind!=="mvno" && p.id!=="povo");
+  if(prio==="store" || checked.includes("store")) pool = pool.filter(p=>p.kind==="subbrand" || p.id==="rakuten");
+  if(prio==="mail") pool = pool.filter(p=>["online","subbrand","carrier"].includes(p.kind));
+
+  const cands=[];
+  for(const p of pool){
+    const pr=p.price(gbCap); if(!pr) continue;
+    const add=p.callAdd(callLv, gbCap); if(add===null) continue;
+    cands.push({plan:p, cap:pr.cap, planName:pr.plan||"", base:pr.fee, call:add, total:pr.fee+add});
+  }
+  cands.sort((a,b)=>a.total-b.total);
+
+  const R=document.getElementById("result");
+  let html = `<section class="card"><h2>結果</h2>`;
+
+  /* おすすめ */
+  if(cands.length===0){
+    html += `<p>この条件に合う候補が料金表にありませんでした。データ量を1段下げて試すか、大手キャリアのプラン見直し（同じ会社でのプラン変更）も検討してください。</p>`;
+  } else {
+    const top=cands[0];
+    html += `<div class="pick"><div class="tag">あなたへのおすすめ</div>
+      <h3>${top.plan.name}${top.planName?`（${top.planName}）`:""}</h3>
+      <div><span class="price">月 ${yen(top.total)}</span> <span style="font-size:13.5px">（基本料 ${yen(top.base)}＋通話の目安 ${yen(top.call)}／〜${top.cap===Infinity?"無制限":top.cap+"GB"}）</span></div>`;
+    if(fee!==null && !Number.isNaN(fee)){
+      const d = fee - top.total;
+      if(d>0) html += `<div class="save">いまより 月 約${yen(d)} ／ 年間 約${yen(d*12)} 下がる目安です</div>`;
+      else html += `<div>いまの料金とほぼ同等か、条件次第では高くなります。無理な乗り換えはおすすめしません。</div>`;
+    }
+    html += `<p style="margin:8px 0 0;font-size:14.5px">${top.plan.why}。${top.plan.callNote}。</p>
+      <p style="margin:4px 0 0;font-size:13.5px"><a href="${top.plan.url}" target="_blank" rel="noopener">公式サイトで最新の料金を確認する</a></p></div>`;
+
+    if(cands.length>1){
+      const alt=cands[1];
+      html += `<div class="alt"><strong>次点：${alt.plan.name}${alt.planName?`（${alt.planName}）`:""} ― 月 ${yen(alt.total)}</strong><br>
+      <span style="font-size:14px">${alt.plan.why}。${alt.plan.callNote}。</span></div>`;
+    }
+    if(prio==="mail" || checked.includes("mail")){
+      html += `<div class="note-card"><h4>キャリアメールについて</h4><p>おすすめ先では今のキャリアメールはそのまま使えません。残す場合は元のキャリアの「持ち運び」サービス（有料・月額制）の申込が別途必要です。まず登録先の洗い出しから始めてください。</p></div>`;
+    }
+    if(prio==="store" || checked.includes("store")){
+      html += `<div class="note-card"><h4>店舗サポートについて</h4><p>店舗で相談できる選択肢の中から選んでいます。大手キャリアをそのまま続ける場合は、同じ会社でのプラン変更（小容量プランへの変更）でも月額が下がることがあるので、店舗で一度確認する価値があります。</p></div>`;
+    }
+  }
+
+  /* 比較表 */
+  if(cands.length>1){
+    html += `<h3 style="margin:14px 0 4px;font-size:15.5px">候補の比較（通話の目安込み）</h3><table class="cmp"><tr><th>プラン</th><th>月額目安</th><th>容量</th></tr>`;
+    for(const c of cands.slice(0,5)){
+      html += `<tr><td>${c.plan.name}${c.planName?`（${c.planName}）`:""}</td><td>${yen(c.total)}</td><td>〜${c.cap===Infinity?"無制限":c.cap+"GB"}</td></tr>`;
+    }
+    html += `</table>`;
+  }
+
+  /* 注意点 */
+  html += `<h3 style="margin:14px 0 6px;font-size:15.5px">確認しておくこと</h3>`;
+  if(checked.length===0){
+    html += `<p style="font-size:14.5px">大きな落とし穴は少なそうです。それでも、更新月と端末の残債だけは契約ページで確認しておくと安心です。あわせて、直近3か月のデータ使用量を確認するとプラン選びがぶれません。</p>`;
+  } else {
+    for(const k of checked){ const n=PITFALL_NOTES[k]; if(n) html += `<div class="note-card"><h4>${n[0]}</h4><p>${n[1]}</p></div>`; }
+  }
+  if(homeSel.value==="hikari"){
+    html += `<div class="note-card"><h4>光回線の見直しポイント</h4><p>回線とプロバイダーが別契約のことがあります。月額は合計で確認してください。スマホとのセット割が使える組み合わせだと、スマホ側の実質料金がさらに下がる場合があります。</p></div>`;
+  }
+
+  /* 手順チェックリスト */
+  const steps=["今の契約ページで、更新月・端末残債・今月のデータ使用量を確認する"];
+  if(checked.includes("mail")) steps.push("キャリアメールを登録しているサービスを洗い出し、連絡先を変更するか持ち運びを申し込む");
+  if(checked.includes("pay")) steps.push("キャリア決済で払っているサブスクの支払い方法を、クレジットカード等に変更する");
+  if(checked.includes("set")) steps.push("家族割・セット割の割引額（実額）と、家族への影響を確認する");
+  steps.push("乗り換え先に申し込む（番号そのままのMNPは、対応会社同士なら予約番号なしのワンストップが使える場合がある）");
+  steps.push("SIM／eSIMを入れ替えて開通し、通話・データ通信・SMS受信をテストする");
+  if(checked.includes("sms")) steps.push("SMS認証を使う主要サービスで、受信テストをする");
+  steps.push("旧回線の最終請求（端末代の継続支払い・解除料の有無）を確認する");
+  if(checked.includes("home_rental")) steps.push("レンタル機器の返却方法と期日を確認し、返却する");
+  html += `<h3 style="margin:14px 0 4px;font-size:15.5px">あなたの乗り換え手順チェックリスト</h3><ol class="steps">` + steps.map(s=>`<li>${s}</li>`).join("") + `</ol>`;
+
+  html += `<div class="btnrow"><button type="button" class="subbtn" id="printBtn">結果を印刷／PDFで保存</button>
+  <button type="button" class="subbtn" id="copyBtn">結果をコピーする</button></div>`;
+  html += `</section>`;
+  R.innerHTML = html; R.style.display="block";
+  R.scrollIntoView({behavior:"smooth"});
+
+  document.getElementById("printBtn").addEventListener("click", ()=>window.print());
+  document.getElementById("copyBtn").addEventListener("click", (e)=>{
+    const text = R.innerText;
+    if(navigator.clipboard) navigator.clipboard.writeText(text);
+    e.target.textContent="コピーしました";
+  });
+});
+</script>
+</body>
+</html>
