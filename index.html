@@ -3,167 +3,260 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>スマホ・ネット代の見直しチェック v2（試作）</title>
+<title>スマホ・ネット代の見直しチェック</title>
 <style>
-:root{
---bg:#eef2f5; --card:#ffffff; --ink:#1d2a38; --navy:#16324f; --teal:#0f766e;
---teal-dark:#0b5a54; --accent:#f59e0b; --soft:#e6f4f1; --warn:#fdf3e3;
---line:#d7dee5; --muted:#5b6b7a; --radius:14px;
-}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Noto Sans JP",sans-serif;line-height:1.7}
-.wrap{max-width:760px;margin:0 auto;padding:20px 14px 60px}
-header.top{background:var(--navy);color:#fff;border-radius:var(--radius);padding:22px 20px;margin-bottom:16px}
-header.top h1{margin:0 0 6px;font-size:22px}
-header.top p{margin:0;font-size:13.5px;opacity:.92}
-.badge{display:inline-block;background:var(--accent);color:#3a2a00;font-weight:700;font-size:12px;border-radius:999px;padding:2px 10px;margin-bottom:8px}
-section.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:14px}
-section.card h2{margin:0 0 4px;font-size:17px;color:var(--navy)}
-section.card.sub{margin:0 0 12px;font-size:13px;color:var(--muted)}
-.checks label,.radios label{display:flex;gap:10px;align-items:flex-start;padding:9px 10px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;cursor:pointer;font-size:14.5px;background:#fbfcfd}
-.checks input,.radios input{margin-top:5px;transform:scale(1.15)}
-.app-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px dashed var(--line);font-size:14.5px}
-.app-row:last-child{border-bottom:none}
-select,input[type="number"]{font-size:15px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
-input[type="number"]{width:160px}
-.field{margin-bottom:14px}
-.field.lab{font-weight:700;font-size:14.5px;display:block;margin-bottom:6px}
-.estimate{background:#eaf2fb;border:1px solid #c9dcf5;border-radius:10px;padding:12px;font-size:14.5px;margin-top:10px}
-.estimate.big{font-size:20px;font-weight:800;color:var(--navy)}
-button.main{width:100%;background:var(--teal);color:#fff;border:none;border-radius:12px;padding:16px;font-size:17px;font-weight:800;cursor:pointer}
-button.main:hover{background:var(--teal-dark)}
-button.subbtn{background:#fff;border:2px solid var(--teal);color:var(--teal-dark);border-radius:10px;padding:8px 14px;font-weight:700;cursor:pointer;font-size:14px}
-#result{display:none;margin-top:16px}
-.pick{background:var(--soft);border:2px solid var(--teal);border-radius:var(--radius);padding:18px;margin-bottom:12px}
-.pick.tag{font-size:12px;font-weight:800;color:var(--teal-dark);letter-spacing:.05em}
-.pick h3{margin:4px 0 6px;font-size:20px;color:var(--navy)}
-.pick.price{font-size:26px;font-weight:800}
-.pick.save{color:#b45309;font-weight:800}
-.alt{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:14px 18px;margin-bottom:12px}
-.note-card{background:#fff;border:1px solid var(--line);border-left:6px solid var(--accent);border-radius:10px;padding:12px 14px;margin-bottom:10px}
-.note-card h4{margin:0 0 4px;font-size:15px}
-.note-card p{margin:0;font-size:14px}
-table.cmp{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0}
-table.cmp th,table.cmp td{border:1px solid var(--line);padding:7px 9px;text-align:left}
-table.cmp th{background:#f2f6f9}
-ol.steps{margin:6px 0 0;padding-left:22px;font-size:14.5px}
-ol.steps li{margin-bottom:6px}
-.foot{font-size:12.5px;color:var(--muted);margin-top:18px}
-.hidden{display:none}
-.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-@media print{
-body{background:#fff}
-header.top,section.card,button.main,.btnrow{display:none!important}
-#result{display:block!important}
-}
+  :root{
+    --bg:#e9eef5; --card:#fff; --ink:#17222e; --navy:#12283e; --teal:#0d7a6e; --teal2:#0a5c54;
+    --mint:#e3f4ef; --amber:#f5a623; --amber-soft:#fdf1d7; --line:#dbe3ec; --muted:#64758a;
+    --shadow:0 10px 30px rgba(18,40,62,.10); --r:18px;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Noto Sans JP",system-ui,sans-serif;line-height:1.65}
+  .wrap{max-width:780px;margin:0 auto;padding:0 14px 90px}
+
+  /* ===== ヒーロー ===== */
+  .hero{margin:14px 0 0;border-radius:24px;padding:30px 24px 26px;color:#fff;position:relative;overflow:hidden;
+    background:linear-gradient(135deg,#12283e 0%,#0d4f57 55%,#0d7a6e 100%);box-shadow:var(--shadow)}
+  .hero::after{content:"";position:absolute;right:-70px;top:-70px;width:230px;height:230px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,255,255,.22),rgba(255,255,255,0) 65%)}
+  .hero .kicker{display:inline-block;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);
+    padding:3px 12px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.06em;margin-bottom:12px}
+  .hero h1{margin:0 0 8px;font-size:27px;line-height:1.35;position:relative;z-index:1}
+  .hero p{margin:0 0 16px;font-size:14px;opacity:.94;position:relative;z-index:1;max-width:560px}
+  .hero .chips{display:flex;gap:8px;flex-wrap:wrap;position:relative;z-index:1}
+  .hero .chips span{background:#fff;color:var(--navy);font-weight:700;font-size:12.5px;border-radius:999px;padding:5px 12px}
+
+  /* ===== 進捗 ===== */
+  .progress{position:sticky;top:0;z-index:20;background:rgba(233,238,245,.92);backdrop-filter:blur(8px);padding:12px 2px 8px}
+  .steps{display:flex;gap:6px}
+  .steps .st{flex:1;text-align:center;font-size:11.5px;color:var(--muted);font-weight:700}
+  .steps .st .dot{width:30px;height:30px;margin:0 auto 3px;border-radius:50%;background:#fff;border:2px solid var(--line);
+    display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .25s}
+  .steps .st.active{color:var(--navy)}
+  .steps .st.active .dot{border-color:var(--teal);background:var(--teal);color:#fff;transform:scale(1.08)}
+  .steps .st.done{color:var(--teal2)}
+  .steps .st.done .dot{border-color:var(--teal);background:var(--mint);color:var(--teal2)}
+  .bar{height:6px;background:#fff;border-radius:99px;margin-top:8px;overflow:hidden;border:1px solid var(--line)}
+  .bar i{display:block;height:100%;width:20%;background:linear-gradient(90deg,var(--teal),#17a398);border-radius:99px;transition:width .4s ease}
+
+  /* ===== パネル ===== */
+  .panel{display:none;background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);padding:24px 20px;margin-top:12px;animation:fadeUp .35s ease}
+  .panel.show{display:block}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .panel h2{margin:0 0 4px;font-size:19px;color:var(--navy)}
+  .panel .sub{margin:0 0 16px;font-size:13.5px;color:var(--muted)}
+  .navrow{display:flex;gap:10px;margin-top:20px}
+  .btn{flex:1;border:none;border-radius:12px;padding:15px;font-size:16px;font-weight:800;cursor:pointer;transition:transform .1s, box-shadow .2s}
+  .btn:active{transform:scale(.98)}
+  .btn.primary{background:linear-gradient(135deg,var(--teal),#12a594);color:#fff;box-shadow:0 8px 18px rgba(13,122,110,.35)}
+  .btn.ghost{flex:0 0 110px;background:#fff;border:2px solid var(--line);color:var(--muted)}
+
+  /* ===== 選択カード ===== */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:560px){.grid{grid-template-columns:1fr}}
+  .selcard{display:flex;gap:10px;align-items:flex-start;text-align:left;width:100%;background:#fbfcfe;border:2px solid var(--line);
+    border-radius:14px;padding:13px 14px;cursor:pointer;font-size:14.5px;font-family:inherit;color:var(--ink);transition:all .15s}
+  .selcard .ic{font-size:19px;line-height:1.3}
+  .selcard small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
+  .selcard.on{border-color:var(--teal);background:var(--mint);box-shadow:0 4px 14px rgba(13,122,110,.18)}
+  .selcard.on .tick{margin-left:auto;color:var(--teal);font-weight:900}
+  .selcard .tick{margin-left:auto;color:transparent;font-weight:900}
+
+  /* ===== アプリ行＋セグメント ===== */
+  .app{border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px;background:#fbfcfe}
+  .app .nm{font-weight:700;font-size:14.5px;margin-bottom:8px}
+  .app .nm span{color:var(--muted);font-weight:400;font-size:12.5px;margin-left:6px}
+  .seg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+  .seg button{border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:9px 4px;font-size:13.5px;font-weight:700;
+    color:var(--muted);cursor:pointer;font-family:inherit;transition:all .15s}
+  .seg button.on{background:var(--teal);border-color:var(--teal);color:#fff}
+  .estimate{position:sticky;bottom:12px;background:var(--navy);color:#fff;border-radius:14px;padding:14px 16px;margin-top:14px;
+    display:flex;align-items:center;gap:12px;box-shadow:var(--shadow);flex-wrap:wrap}
+  .estimate .num{font-size:26px;font-weight:900;line-height:1}
+  .estimate .lbl{font-size:12.5px;opacity:.85}
+  .estimate button{margin-left:auto;background:var(--amber);color:#33230a;border:none;font-weight:800;border-radius:10px;padding:10px 14px;cursor:pointer;font-size:14px}
+  .estimate button:disabled{opacity:.4;cursor:default}
+
+  /* ===== フォーム ===== */
+  .field{margin-bottom:18px}
+  .field .lab{font-weight:800;font-size:14.5px;display:block;margin-bottom:8px;color:var(--navy)}
+  .field .hint{font-size:12.5px;color:var(--muted);margin-top:6px}
+  select.big{width:100%;font-size:16px;padding:13px;border:1.5px solid var(--line);border-radius:12px;background:#fff;font-family:inherit}
+  .feebox{display:flex;align-items:center;gap:8px;border:1.5px solid var(--line);border-radius:12px;padding:4px 14px;background:#fff}
+  .feebox span{font-weight:800;color:var(--muted)}
+  .feebox input{border:none;outline:none;font-size:19px;font-weight:800;width:100%;padding:10px 0;font-family:inherit;color:var(--ink)}
+
+  /* ===== 結果 ===== */
+  .pick{border-radius:var(--r);padding:22px 20px;color:#fff;margin-bottom:14px;position:relative;overflow:hidden;
+    background:linear-gradient(135deg,#0d7a6e,#0a5c54);box-shadow:var(--shadow)}
+  .pick .tag{font-size:12px;font-weight:800;letter-spacing:.08em;background:rgba(255,255,255,.2);display:inline-block;padding:3px 10px;border-radius:99px}
+  .pick h3{margin:10px 0 2px;font-size:23px}
+  .pick .priceRow{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-top:6px}
+  .pick .price{font-size:34px;font-weight:900;line-height:1}
+  .pick .save{display:inline-block;background:var(--amber);color:#33230a;font-weight:900;border-radius:10px;padding:6px 12px;margin-top:12px;font-size:15px}
+  .pick p{font-size:14px;margin:10px 0 0;opacity:.95}
+  .pick a.officialBtn{display:block;text-align:center;background:#fff;color:var(--teal2);padding:14px;border-radius:12px;
+    font-weight:900;text-decoration:none;margin-top:14px;font-size:16px;position:relative;z-index:2;box-shadow:0 6px 16px rgba(0,0,0,.18)}
+  .pick a.officialBtn:active{transform:scale(.99)}
+  .altLink{display:inline-block;margin-top:8px;background:var(--mint);color:var(--teal2);font-weight:800;border-radius:10px;
+    padding:9px 14px;text-decoration:none;font-size:14px;position:relative;z-index:2}
+  .card2{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);padding:20px;margin-bottom:14px}
+  .card2 h3{margin:0 0 10px;font-size:16.5px;color:var(--navy)}
+  .note-card{border:1.5px solid var(--line);border-left:6px solid var(--amber);border-radius:12px;padding:12px 14px;margin-bottom:10px;background:#fffdf7}
+  .note-card h4{margin:0 0 3px;font-size:15px}
+  .note-card p{margin:0;font-size:14px;color:#3c4a59}
+  table.cmp{width:100%;border-collapse:collapse;font-size:14px}
+  table.cmp th,table.cmp td{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left}
+  table.cmp tr.best td{font-weight:800;color:var(--teal2);background:var(--mint)}
+  .todo{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1.5px solid var(--line);border-radius:12px;margin-bottom:8px;cursor:pointer;font-size:14.5px;background:#fbfcfe}
+  .todo input{margin-top:4px;transform:scale(1.2)}
+  .todo.done{opacity:.55;text-decoration:line-through}
+  .meter{height:8px;background:#eef2f6;border-radius:99px;overflow:hidden;margin:8px 0 14px}
+  .meter i{display:block;height:100%;background:var(--amber);width:0;transition:width .3s}
+  .btnrow{display:flex;gap:10px;flex-wrap:wrap}
+  .btnrow .subbtn{flex:1;background:#fff;border:2px solid var(--teal);color:var(--teal2);border-radius:12px;padding:12px;font-weight:800;cursor:pointer;font-size:14.5px;font-family:inherit}
+  .foot{font-size:12.5px;color:var(--muted);margin-top:16px}
+  .hidden{display:none !important}
 </style>
 </head>
 <body>
 <div class="wrap">
 
-<header class="top">
-<span class="badge">改良版 v2 試作（有料版相当）</span>
-<h1>スマホ・ネット代の見直しチェック</h1>
-<p>使い方と契約の状況から、あなたに合う具体的なプランを1つ選び、通話料込みの月額と、いまとの差額をお見せします。入力内容は保存されず、この画面の中だけで使われます。</p>
-</header>
+  <div class="hero">
+    <h1>スマホ代、<br>払いすぎていませんか？</h1>
+    <p>4つのステップに答えるだけで、あなたに合う具体的なプランを1つ選んで、通話料込みの月額と、いまとの差額をお見せします。入力内容は保存されず、この画面の中だけで使われます。</p>
+    <div class="chips"><span>⏱ 約3分</span><span>📝 登録不要</span><span>🔒 入力は保存されません</span></div>
+  </div>
 
-<section class="card">
-<h2>1. 乗り換えで困りやすいこと（当てはまるもの）</h2>
-<p class="sub">あとから「知らなかった」になりやすい項目です。結果に個別の注意点として表示されます。</p>
-<div class="checks" id="pitfalls">
-<label><input type="checkbox" value="mail">キャリアのメールアドレス（@docomo.ne.jp など）をよく使っている</label>
-<label><input type="checkbox" value="pay">キャリア決済（スマホ代と一緒に支払う決済）を使っている</label>
-<label><input type="checkbox" value="device">端末代の分割払いが残っている</label>
-<label><input type="checkbox" value="set">家族割や、光回線・でんきとのセット割が付いている</label>
-<label><input type="checkbox" value="term">契約期間の縛りや、更新月がある</label>
-<label><input type="checkbox" value="sms">SMS認証（2段階認証）を使うサービスが多い</label>
-<label><input type="checkbox" value="store">店舗での対面サポートに頼りたい</label>
-</div>
-</section>
+  <div class="progress">
+    <div class="steps" id="stepsBar">
+      <div class="st" data-st="1"><div class="dot">1</div>困りごと</div>
+      <div class="st" data-st="2"><div class="dot">2</div>使い方</div>
+      <div class="st" data-st="3"><div class="dot">3</div>今の契約</div>
+      <div class="st" data-st="4"><div class="dot">4</div>自宅回線</div>
+      <div class="st" data-st="5"><div class="dot">✓</div>結果</div>
+    </div>
+    <div class="bar"><i id="barFill"></i></div>
+  </div>
 
-<section class="card">
-<h2>2. アプリの使い方から、データ量の目安を出す</h2>
-<p class="sub">契約者ページで使用量を見られない人向けです。外出先でモバイル回線を使う分だけで選んでください（自宅Wi-Fiの分は入れません）。<br>
-ときどき＝外出先で月 約5時間／よく使う＝月 約15時間 として、用途ごとの1時間あたりの目安で計算します。</p>
-<div id="apps"></div>
-<div class="estimate" id="estimateBox">アプリを選ぶと、ここに目安が出ます。</div>
-<div class="btnrow"><button type="button" class="subbtn" id="applyEstimate" disabled>この目安を「月のデータ使用量」に使う</button></div>
-</section>
+  <!-- STEP 1 -->
+  <section class="panel" data-panel="1">
+    <h2>乗り換えで困りやすいこと</h2>
+    <p class="sub">当てはまるものをタップしてください（いくつでも）。結果に個別の注意点として表示されます。</p>
+    <div class="grid" id="pitfalls"></div>
+    <div class="navrow"><button class="btn primary" data-next>次へ ― 使い方の入力</button></div>
+  </section>
 
-<section class="card">
-<h2>3. いまの使い方</h2>
-<div class="field">
-<span class="lab">月のデータ使用量</span>
-<select id="dataSel">
-<option value="unknown">分からない（10〜20GBとして計算）</option>
-<option value="3">3GBまで</option>
-<option value="10">3〜10GBくらい</option>
-<option value="20">10〜20GBくらい</option>
-<option value="30">20〜30GBくらい</option>
-<option value="50">30GB超・無制限希望</option>
-</select>
-</div>
-<div class="field">
-<span class="lab">通話（普通の電話をかける量）</span>
-<select id="callSel">
-<option value="none">ほとんどしない（LINE通話が中心）</option>
-<option value="some">たまにする（短い電話が月に何回か）</option>
-<option value="many">よくする（仕事や家族と長めに話す）</option>
-</select>
-</div>
-<div class="field">
-<span class="lab">いまのスマホ代（月額）</span>
-<input type="number" id="feeInput" inputmode="numeric" placeholder="例：6500"> 円
-<p class="sub" style="margin-top:6px">端末代の分割払いは除いた、通信料とオプションの合計で入れてください。空欄でも使えます。</p>
-</div>
-<div class="field">
-<span class="lab">一番大事にしたいこと</span>
-<div class="radios" id="priority">
-<label><input type="radio" name="prio" value="cheap" checked>とにかく安くしたい</label>
-<label><input type="radio" name="prio" value="quality">通信の安定や速さも大事にしたい</label>
-<label><input type="radio" name="prio" value="store">店舗などの対面サポートがほしい</label>
-<label><input type="radio" name="prio" value="mail">キャリアメールや今のサービスを続けたい</label>
-</div>
-</div>
-</section>
+  <!-- STEP 2 -->
+  <section class="panel" data-panel="2">
+    <h2>アプリの使い方から、データ量の目安を出す</h2>
+    <p class="sub">契約者ページで使用量を見られない人向けです。外出先でモバイル回線を使う分だけで選んでください（自宅Wi-Fiの分は入れません）。<br>「ときどき＝月 約5時間」「よく使う＝月 約15時間」として、用途ごとの目安で計算します。</p>
+    <div id="apps"></div>
+    <div class="estimate">
+      <div><div class="lbl">月のデータ量の目安</div><div><span class="num" id="estNum">―</span> <span id="estUnit">GB</span></div></div>
+      <button type="button" id="applyEstimate" disabled>この目安を使う</button>
+    </div>
+    <p class="hint" style="font-size:12.5px;color:var(--muted)" id="estBreak"></p>
+    <div class="navrow"><button class="btn ghost" data-back>戻る</button><button class="btn primary" data-next>次へ ― 今の契約</button></div>
+  </section>
 
-<section class="card">
-<h2>4. 自宅のネット回線</h2>
-<div class="field">
-<span class="lab">回線の種類</span>
-<select id="homeSel">
-<option value="none">自宅の回線は使っていない</option>
-<option value="hikari">光回線</option>
-<option value="router">ホームルーター（置くだけWi-Fi）</option>
-<option value="unknown">分からない</option>
-</select>
-</div>
-<div id="homeChecksWrap" class="hidden">
-<p class="sub">自宅回線で当てはまるものを選んでください。</p>
-<div class="checks" id="homePitfalls">
-<label><input type="checkbox" value="home_fee">解約・乗り換えると、工事費の残りや違約金がありそう</label>
-<label><input type="checkbox" value="home_rental">回線の機器（ルーター・ONUなど）をレンタルしている</label>
-<label><input type="checkbox" value="home_mail">プロバイダーのメールアドレスを使っている</label>
-<label><input type="checkbox" value="home_move">1〜2年のうちに引っ越す予定がある</label>
-<label><input type="checkbox" value="home_slow">今の自宅回線の速度や安定性に不満がある</label>
-</div>
-</div>
-</section>
+  <!-- STEP 3 -->
+  <section class="panel" data-panel="3">
+    <h2>いまの使い方と、大事にしたいこと</h2>
+    <p class="sub">分かる範囲で大丈夫です。空欄や「分からない」でも診断できます。</p>
+    <div class="field">
+      <span class="lab">月のデータ使用量</span>
+      <select class="big" id="dataSel">
+        <option value="unknown">分からない（10〜20GBとして計算）</option>
+        <option value="3">3GBまで</option>
+        <option value="10">3〜10GBくらい</option>
+        <option value="20">10〜20GBくらい</option>
+        <option value="30">20〜30GBくらい</option>
+        <option value="50">30GB超・無制限希望</option>
+      </select>
+    </div>
+    <div class="field">
+      <span class="lab">通話（普通の電話をかける量）</span>
+      <select class="big" id="callSel">
+        <option value="none">ほとんどしない（LINE通話が中心）</option>
+        <option value="some">たまにする（短い電話が月に何回か）</option>
+        <option value="many">よくする（仕事や家族と長めに話す）</option>
+      </select>
+    </div>
+    <div class="field">
+      <span class="lab">いまのスマホ代（月額）</span>
+      <div class="feebox"><span>¥</span><input type="number" id="feeInput" inputmode="numeric" placeholder="6500"><span>／月</span></div>
+      <p class="hint">端末代の分割払いは除いた、通信料とオプションの合計で入れてください。空欄でも使えます。</p>
+    </div>
+    <div class="field">
+      <span class="lab">一番大事にしたいこと</span>
+      <div class="grid" id="priority"></div>
+    </div>
+    <div class="field">
+      <span class="lab">家族の回線数（自分を含む）</span>
+      <div class="seg" id="famSeg" style="grid-template-columns:1fr 1fr 1fr 1fr">
+        <button type="button" data-fam="1" class="on">1人</button>
+        <button type="button" data-fam="2">2人</button>
+        <button type="button" data-fam="3">3人</button>
+        <button type="button" data-fam="4">4人以上</button>
+      </div>
+      <p class="hint">2人以上を選ぶと、結果で「全員バラバラに一番安いプランにした場合」と「家族割のある会社にまとめた場合」を比べます。</p>
+    </div>
+    <div class="field hidden" id="famCarrierWrap">
+      <span class="lab">家族みんなが今使っている会社</span>
+      <select class="big" id="famCarrier">
+        <option value="mixed">バラバラ／分からない</option>
+        <option value="docomo">全員ドコモ系</option>
+        <option value="au">全員au系</option>
+        <option value="softbank">全員ソフトバンク系</option>
+        <option value="rakuten">全員楽天モバイル</option>
+        <option value="mvno">全員格安SIM系</option>
+      </select>
+    </div>
+    <div class="navrow"><button class="btn ghost" data-back>戻る</button><button class="btn primary" data-next>次へ ― 自宅回線</button></div>
+  </section>
 
-<button type="button" class="main" id="runBtn">チェック結果を見る</button>
+  <!-- STEP 4 -->
+  <section class="panel" data-panel="4">
+    <h2>自宅のネット回線</h2>
+    <p class="sub">スマホとのセット割や、解約時の注意に関わります。</p>
+    <div class="field">
+      <span class="lab">回線の種類</span>
+      <select class="big" id="homeSel">
+        <option value="none">自宅の回線は使っていない</option>
+        <option value="hikari">光回線</option>
+        <option value="router">ホームルーター（置くだけWi-Fi）</option>
+        <option value="unknown">分からない</option>
+      </select>
+    </div>
+    <div id="homeChecksWrap" class="hidden">
+      <span class="lab" style="font-weight:800;font-size:14.5px;color:var(--navy);display:block;margin-bottom:8px">自宅回線で当てはまるもの</span>
+      <div class="grid" id="homePitfalls"></div>
+    </div>
+    <div class="navrow"><button class="btn ghost" data-back>戻る</button><button class="btn primary" id="runBtn">診断結果を見る 🎉</button></div>
+  </section>
 
-<div id="result"></div>
+  <!-- STEP 5 結果 -->
+  <section class="panel" data-panel="5">
+    <div id="result"></div>
+    <div class="navrow"><button class="btn ghost" data-back style="flex:1">入力に戻る</button></div>
+  </section>
 
-<p class="foot">
-料金は2026年10月に公開情報で確認した税込・割引前の基本料金です（実装前に各社公式で再確認します）。キャンペーン価格は含みません。節約額は目安で、保証するものではありません。申込前に必ず各社の公式サイトで最新の料金と条件を確認してください。<br>
-ahamoは2026年12月1日から段階制（〜40GB 3,135円／〜60GB 4,125円／〜120GB 5,115円）に改定予定のため、このツールのahamo料金は改定前のものです。
-</p>
+  <p class="foot">
+    料金は2026年10月に公開情報で確認した税込・割引前の基本料金です（販売前に各社公式で再確認します）。キャンペーン価格は含みません。節約額は目安で、保証するものではありません。申込前に必ず各社の公式サイトで最新の料金と条件を確認してください。<br>
+    ahamoは2026年12月1日から段階制（〜40GB 3,135円／〜60GB 4,125円／〜120GB 5,115円）に改定予定のため、このツールのahamo料金は改定前のものです。
+  </p>
 
 </div>
 
 <script>
 "use strict";
-/* ===== データ量の目安：1時間あたりGB（原案の定義表） ===== */
+/* 印刷時は結果だけ出す */
+const _ps=document.createElement("style");
+_ps.textContent="@media print{ .hero,.progress,.foot,.navrow{display:none !important} .panel{display:none !important} .panel.show{display:block !important;box-shadow:none} body{background:#fff} }";
+document.head.appendChild(_ps);
+
 const APPS = [
   {key:"video",  name:"YouTube・動画配信（Netflixなど）", rate:1.1},
   {key:"short",  name:"TikTok・Instagramリール・YouTubeショート", rate:0.7},
@@ -175,6 +268,7 @@ const APPS = [
   {key:"web",    name:"ネット検索・ニュース", rate:0.15},
   {key:"meeting",name:"ビデオ会議（Zoomなど）", rate:1.0}
 ];
+
 const HOURS = {none:0, some:5, many:15};
 
 /* ===== プランDB（2026年10月確認・税込・割引前） =====
@@ -246,55 +340,154 @@ const PITFALL_NOTES = {
   home_slow:["不満の原因を先に切り分ける","速度の不満は、回線自体ではなくルーターの古さや置き場所が原因のことも多いです。乗り換え前にルーター再起動と設置場所の見直しを試してください。"]
 };
 
-/* ===== アプリ目安UI ===== */
-const appsEl = document.getElementById("apps");
-APPS.forEach(a=>{
-  const row=document.createElement("div"); row.className="app-row";
-  row.innerHTML = `<span>${a.name}</span>`;
-  const sel=document.createElement("select"); sel.dataset.key=a.key; sel.dataset.rate=a.rate;
-  sel.innerHTML = `<option value="none">使わない</option><option value="some">ときどき（月約5時間）</option><option value="many">よく使う（月約15時間）</option>`;
-  sel.addEventListener("change", updateEstimate);
-  row.appendChild(sel); appsEl.appendChild(row);
+/* ===== UIデータ ===== */
+const PITFALL_UI = [
+  {v:"mail", icon:"📧", label:"キャリアメールをよく使っている", small:"@docomo.ne.jp など"},
+  {v:"pay", icon:"💳", label:"キャリア決済を使っている", small:"スマホ代と一緒に支払い"},
+  {v:"device", icon:"📱", label:"端末代の分割払いが残っている", small:"残債がある"},
+  {v:"set", icon:"🔗", label:"家族割・セット割が付いている", small:"光回線・でんきとのセットも"},
+  {v:"term", icon:"🗓️", label:"契約期間の縛り・更新月がある", small:"解除料の心配"},
+  {v:"sms", icon:"🔐", label:"SMS認証を使うサービスが多い", small:"2段階認証"},
+  {v:"store", icon:"🏪", label:"店舗の対面サポートに頼りたい", small:"窓口で相談したい"}
+];
+const HOME_UI = [
+  {v:"home_fee", icon:"🧾", label:"解約で工事費の残りや違約金がありそう"},
+  {v:"home_rental", icon:"📦", label:"機器（ルーター・ONU）をレンタルしている"},
+  {v:"home_mail", icon:"✉️", label:"プロバイダーのメールを使っている"},
+  {v:"home_move", icon:"🚚", label:"1〜2年のうちに引っ越す予定がある"},
+  {v:"home_slow", icon:"🐢", label:"今の回線の速度や安定性に不満がある"}
+];
+const PRIO_UI = [
+  {v:"cheap", icon:"💰", label:"とにかく安くしたい", small:"月額の安さが最優先"},
+  {v:"quality", icon:"📶", label:"安定や速さも大事にしたい", small:"混雑時も快適に"},
+  {v:"store", icon:"🏪", label:"店舗サポートがほしい", small:"対面で相談できる安心"},
+  {v:"mail", icon:"📧", label:"キャリアメールを続けたい", small:"今のサービスを維持"}
+];
+const APP_ICONS = {video:"🎬", short:"🎵", sns:"📱", line:"💬", music:"🎧", game:"🎮", map:"🗺️", web:"📰", meeting:"💻"};
+
+/* ===== 状態 ===== */
+const state = { pitfalls:new Set(), home:new Set(), apps:{}, prio:"cheap" };
+APPS.forEach(a=>state.apps[a.key]="none");
+
+/* ===== 選択カード生成 ===== */
+function buildCards(elId, items, setObj){
+  const el=document.getElementById(elId);
+  items.forEach(it=>{
+    const b=document.createElement("button"); b.type="button"; b.className="selcard";
+    b.innerHTML=`<span class="ic">${it.icon}</span><span>${it.label}${it.small?`<small>${it.small}</small>`:""}</span><span class="tick">✓</span>`;
+    b.addEventListener("click", ()=>{
+      if(setObj.has(it.v)){ setObj.delete(it.v); b.classList.remove("on"); }
+      else{ setObj.add(it.v); b.classList.add("on"); }
+    });
+    el.appendChild(b);
+  });
+}
+buildCards("pitfalls", PITFALL_UI, state.pitfalls);
+buildCards("homePitfalls", HOME_UI, state.home);
+
+/* 重視点（単一選択） */
+const prioEl=document.getElementById("priority");
+PRIO_UI.forEach(it=>{
+  const b=document.createElement("button"); b.type="button"; b.className="selcard"+(it.v===state.prio?" on":"");
+  b.innerHTML=`<span class="ic">${it.icon}</span><span>${it.label}<small>${it.small}</small></span><span class="tick">✓</span>`;
+  b.addEventListener("click", ()=>{
+    state.prio=it.v;
+    prioEl.querySelectorAll(".selcard").forEach(x=>x.classList.remove("on"));
+    b.classList.add("on");
+  });
+  prioEl.appendChild(b);
 });
-let estimateGB = null;
+
+/* ===== アプリ＋セグメント ===== */
+const appsEl=document.getElementById("apps");
+APPS.forEach(a=>{
+  const d=document.createElement("div"); d.className="app";
+  d.innerHTML=`<div class="nm">${APP_ICONS[a.key]||""} ${a.name}<span>1時間 約${a.rate}GB</span></div>`;
+  const seg=document.createElement("div"); seg.className="seg";
+  [["none","使わない"],["some","ときどき"],["many","よく使う"]].forEach(([v,lb])=>{
+    const btn=document.createElement("button"); btn.type="button"; btn.textContent=lb;
+    if(v==="none") btn.classList.add("on");
+    btn.addEventListener("click", ()=>{
+      state.apps[a.key]=v;
+      seg.querySelectorAll("button").forEach(x=>x.classList.remove("on"));
+      btn.classList.add("on");
+      updateEstimate();
+    });
+    seg.appendChild(btn);
+  });
+  d.appendChild(seg); appsEl.appendChild(d);
+});
+let estimateGB=null;
 function updateEstimate(){
   let total=0; const parts=[];
-  appsEl.querySelectorAll("select").forEach(s=>{
-    const h=HOURS[s.value]; if(h>0){ const gb=h*parseFloat(s.dataset.rate); total+=gb; parts.push(`${s.previousSibling.textContent.split("・")[0]} 約${(Math.round(gb*2)/2)}GB`); }
+  APPS.forEach(a=>{
+    const h=HOURS[state.apps[a.key]];
+    if(h>0){ const gb=h*a.rate; total+=gb; parts.push(`${a.name.split("・")[0]} 約${Math.round(gb*2)/2}GB`); }
   });
-  const box=document.getElementById("estimateBox");
-  const btn=document.getElementById("applyEstimate");
-  if(total<=0){ estimateGB=null; box.textContent="アプリを選ぶと、ここに目安が出ます。"; btn.disabled=true; return; }
-  estimateGB = Math.round(total*2)/2;
-  box.innerHTML = `月に約 <span class="big">${estimateGB}GB</span> が目安です。<br><span style="font-size:13px;color:#5b6b7a">内訳：${parts.join("／")}。外出先のモバイル回線だけの概算です。契約者ページで実量を確認できるなら、そちらが正確です。</span>`;
+  const num=document.getElementById("estNum"), btn=document.getElementById("applyEstimate"), br=document.getElementById("estBreak");
+  if(total<=0){ estimateGB=null; num.textContent="―"; btn.disabled=true; br.textContent=""; return; }
+  estimateGB=Math.round(total*2)/2;
+  num.textContent=estimateGB;
   btn.disabled=false;
+  br.textContent="内訳："+parts.join("／")+"。外出先のモバイル回線だけの概算です。契約者ページで実量を確認できるなら、そちらが正確です。";
 }
 document.getElementById("applyEstimate").addEventListener("click", ()=>{
   if(estimateGB===null) return;
   const sel=document.getElementById("dataSel");
   sel.value = estimateGB<=3 ? "3" : estimateGB<=10 ? "10" : estimateGB<=20 ? "20" : estimateGB<=30 ? "30" : "50";
+  showStep(3);
 });
 
-/* ===== 自宅回線チェックの表示切替 ===== */
+/* ===== 家族の回線数 ===== */
+state.fam=1;
+document.querySelectorAll("#famSeg button").forEach(b=>{
+  b.addEventListener("click", ()=>{
+    state.fam=Number(b.dataset.fam);
+    document.querySelectorAll("#famSeg button").forEach(x=>x.classList.remove("on"));
+    b.classList.add("on");
+    document.getElementById("famCarrierWrap").classList.toggle("hidden", state.fam<2);
+  });
+});
+/* 家族割の実額（2026年10月確認・1回線あたり月額） */
+const FAM_DISCOUNT = { rakuten:110, iijmio:100 };
+
+/* ===== 自宅回線 ===== */
 const homeSel=document.getElementById("homeSel");
 homeSel.addEventListener("change", ()=>{
   document.getElementById("homeChecksWrap").classList.toggle("hidden", homeSel.value==="none");
 });
 
-/* ===== 診断 ===== */
+/* ===== ステップ遷移 ===== */
+let curStep=1;
+function showStep(n){
+  curStep=n;
+  document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("show", Number(p.dataset.panel)===n));
+  document.querySelectorAll("#stepsBar .st").forEach(s=>{
+    const k=Number(s.dataset.st);
+    s.classList.toggle("active", k===n);
+    s.classList.toggle("done", k<n);
+    s.querySelector(".dot").textContent = k<n ? "✓" : (k===5 ? "✓" : k);
+  });
+  document.getElementById("barFill").style.width=(n/5*100)+"%";
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+document.querySelectorAll("[data-next]").forEach(b=>b.addEventListener("click", ()=>showStep(curStep+1)));
+document.querySelectorAll("[data-back]").forEach(b=>b.addEventListener("click", ()=>showStep(curStep-1)));
+showStep(1);
+
+/* ===== 診断（ロジックはv2と同一） ===== */
 function yen(n){ return n.toLocaleString("ja-JP")+"円"; }
 document.getElementById("runBtn").addEventListener("click", ()=>{
   const gbCap = {unknown:20,"3":3,"10":10,"20":20,"30":30,"50":50}[document.getElementById("dataSel").value];
   const callLv = document.getElementById("callSel").value;
   const feeRaw = document.getElementById("feeInput").value.trim();
   const fee = feeRaw==="" ? null : Number(feeRaw);
-  const prio = document.querySelector("input[name='prio']:checked").value;
-  const checked = [...document.querySelectorAll("#pitfalls input:checked, #homePitfalls input:checked")].map(i=>i.value);
-  if(checked.includes("store") && prio==="cheap"){ /* 店舗希望チェックがあれば店舗優先に寄せる */ }
+  const prio = state.prio;
+  const checked = [...state.pitfalls, ...state.home];
 
   let pool = PLANS.slice();
   if(prio==="quality") pool = pool.filter(p=>p.kind!=="mvno" && p.id!=="povo");
-  if(prio==="store" || checked.includes("store")) pool = pool.filter(p=>p.kind==="subbrand" || p.id==="rakuten");
+  if(prio==="store" || state.pitfalls.has("store")) pool = pool.filter(p=>p.kind==="subbrand" || p.id==="rakuten");
   if(prio==="mail") pool = pool.filter(p=>["online","subbrand","carrier"].includes(p.kind));
 
   const cands=[];
@@ -306,80 +499,127 @@ document.getElementById("runBtn").addEventListener("click", ()=>{
   cands.sort((a,b)=>a.total-b.total);
 
   const R=document.getElementById("result");
-  let html = `<section class="card"><h2>結果</h2>`;
+  let html="";
 
-  /* おすすめ */
   if(cands.length===0){
-    html += `<p>この条件に合う候補が料金表にありませんでした。データ量を1段下げて試すか、大手キャリアのプラン見直し（同じ会社でのプラン変更）も検討してください。</p>`;
+    html += `<div class="card2"><h3>結果</h3><p>この条件に合う候補が料金表にありませんでした。データ量を1段下げて試すか、大手キャリアでのプラン変更（同じ会社での見直し）も検討してください。</p></div>`;
   } else {
     const top=cands[0];
-    html += `<div class="pick"><div class="tag">あなたへのおすすめ</div>
+    html += `<div class="pick"><span class="tag">🏆 あなたへのおすすめ</span>
       <h3>${top.plan.name}${top.planName?`（${top.planName}）`:""}</h3>
-      <div><span class="price">月 ${yen(top.total)}</span> <span style="font-size:13.5px">（基本料 ${yen(top.base)}＋通話の目安 ${yen(top.call)}／〜${top.cap===Infinity?"無制限":top.cap+"GB"}）</span></div>`;
+      <div class="priceRow"><span class="price">月 ${yen(top.total)}</span><span>基本料 ${yen(top.base)}＋通話の目安 ${yen(top.call)} ／ 〜${top.cap===Infinity?"無制限":top.cap+"GB"}</span></div>`;
     if(fee!==null && !Number.isNaN(fee)){
-      const d = fee - top.total;
-      if(d>0) html += `<div class="save">いまより 月 約${yen(d)} ／ 年間 約${yen(d*12)} 下がる目安です</div>`;
-      else html += `<div>いまの料金とほぼ同等か、条件次第では高くなります。無理な乗り換えはおすすめしません。</div>`;
+      const d=fee-top.total;
+      if(d>0) html += `<div><span class="save">💴 いまより 月 約${yen(d)} ／ 年間 約${yen(d*12)} 下がる目安</span></div>`;
+      else html += `<p>いまの料金とほぼ同等か、条件次第では高くなります。無理な乗り換えはおすすめしません。</p>`;
     }
-    html += `<p style="margin:8px 0 0;font-size:14.5px">${top.plan.why}。${top.plan.callNote}。</p>
-      <p style="margin:4px 0 0;font-size:13.5px"><a href="${top.plan.url}" target="_blank" rel="noopener">公式サイトで最新の料金を確認する</a></p></div>`;
+    html += `<p>${top.plan.why}。${top.plan.callNote}。</p>
+      <a class="officialBtn" href="${top.plan.url}">公式サイトで最新の料金を確認する ↗</a></div>`;
 
     if(cands.length>1){
       const alt=cands[1];
-      html += `<div class="alt"><strong>次点：${alt.plan.name}${alt.planName?`（${alt.planName}）`:""} ― 月 ${yen(alt.total)}</strong><br>
-      <span style="font-size:14px">${alt.plan.why}。${alt.plan.callNote}。</span></div>`;
+      html += `<div class="card2"><h3>次点の候補</h3><p style="margin:0"><strong>${alt.plan.name}${alt.planName?`（${alt.planName}）`:""} ― 月 ${yen(alt.total)}</strong><br><span style="font-size:14px">${alt.plan.why}。${alt.plan.callNote}。</span></p><a class="altLink" href="${alt.plan.url}">公式サイトを開く ↗</a></div>`;
     }
-    if(prio==="mail" || checked.includes("mail")){
-      html += `<div class="note-card"><h4>キャリアメールについて</h4><p>おすすめ先では今のキャリアメールはそのまま使えません。残す場合は元のキャリアの「持ち運び」サービス（有料・月額制）の申込が別途必要です。まず登録先の洗い出しから始めてください。</p></div>`;
+    if(prio==="mail" || state.pitfalls.has("mail")){
+      html += `<div class="note-card"><h4>📧 キャリアメールについて</h4><p>おすすめ先では今のキャリアメールはそのまま使えません。残す場合は元のキャリアの「持ち運び」サービス（有料・月額制）の申込が別途必要です。まず登録先の洗い出しから始めてください。</p></div>`;
     }
-    if(prio==="store" || checked.includes("store")){
-      html += `<div class="note-card"><h4>店舗サポートについて</h4><p>店舗で相談できる選択肢の中から選んでいます。大手キャリアをそのまま続ける場合は、同じ会社でのプラン変更（小容量プランへの変更）でも月額が下がることがあるので、店舗で一度確認する価値があります。</p></div>`;
+    if(prio==="store" || state.pitfalls.has("store")){
+      html += `<div class="note-card"><h4>🏪 店舗サポートについて</h4><p>店舗で相談できる選択肢の中から選んでいます。大手キャリアを続ける場合は、同じ会社でのプラン変更でも月額が下がることがあるので、店舗で一度確認する価値があります。</p></div>`;
     }
+
+    /* 比較表 */
+    html += `<div class="card2"><h3>候補の比較（通話の目安込み）</h3><table class="cmp"><tr><th>プラン</th><th>月額目安</th><th>容量</th></tr>`;
+    cands.slice(0,5).forEach((c,i)=>{
+      html += `<tr class="${i===0?"best":""}"><td>${i===0?"🏆 ":""}${c.plan.name}${c.planName?`（${c.planName}）`:""}</td><td>${yen(c.total)}</td><td>〜${c.cap===Infinity?"無制限":c.cap+"GB"}</td></tr>`;
+    });
+    html += `</table></div>`;
+
+    /* 家族割チェック：まとめる vs バラバラ */
+    if(state.fam>=2){
+      const N=state.fam;
+      const bestEach = (()=>{
+        let best=null;
+        for(const p of PLANS){ const pr=p.price(gbCap); if(!pr) continue; const a=p.callAdd(callLv,gbCap); if(a===null) continue;
+          const t=pr.fee+a; if(!best||t<best.total) best={plan:p,total:t}; }
+        return best;
+      })();
+      let bestBundle=null;
+      for(const p of PLANS){
+        const disc=FAM_DISCOUNT[p.id]; if(!disc) continue;
+        const pr=p.price(gbCap); if(!pr) continue; const a=p.callAdd(callLv,gbCap); if(a===null) continue;
+        const t=pr.fee+a-disc; if(!bestBundle||t<bestBundle.total) bestBundle={plan:p,total:t,disc};
+      }
+      if(bestEach && bestBundle){
+        const eachTotal=bestEach.total*N, bundleTotal=bestBundle.total*N;
+        const carrierSel=document.getElementById("famCarrier").value;
+        const carrierNote = {
+          docomo:"今はドコモ系でそろえていますね。大手の家族割は人数やプランで割引額が変わるため、実額は契約ページで確認してください。一般に、家族割の実額（1人あたり）より基本料の差の方が大きいことが多いです。",
+          au:"今はau系でそろえていますね。UQ mobileやpovoへの移行でも家族割に近い割引が残る組み合わせがあります。実額は契約ページで確認してください。",
+          softbank:"今はソフトバンク系でそろえていますね。ワイモバイルやLINEMOへの移行でも割引が続く組み合わせがあります。実額は契約ページで確認してください。",
+          rakuten:"今は楽天モバイルでそろえていますね。最強家族割は1回線あたり月110円です。",
+          mvno:"今は格安SIM系です。会社によっては家族割（例：IIJmioは1回線あたり月100円）があります。",
+          mixed:"家族の会社がバラバラな場合、家族割は付いていないか、一部の回線だけのことが多いです。"
+        }[carrierSel] || "";
+        html += `<div class="card2"><h3>👨‍👩‍👧 家族割チェック（${N}人分・全員があなたと同じ使い方と仮定した目安）</h3>
+        <table class="cmp"><tr><th>比べ方</th><th>1人あたり</th><th>${N}人合計／月</th></tr>
+        <tr><td>バラバラ：各自が一番安いプラン（${bestEach.plan.name}）</td><td>${yen(bestEach.total)}</td><td>${yen(eachTotal)}</td></tr>
+        <tr class="${bundleTotal<=eachTotal?"best":""}"><td>まとめる：${bestBundle.plan.name}（家族割 −${yen(bestBundle.disc)}／人）</td><td>${yen(bestBundle.total)}</td><td>${yen(bundleTotal)}</td></tr></table>
+        <p style="font-size:14px;margin:8px 0 0">${bundleTotal<eachTotal
+          ? `この使い方では、<strong>まとめた方が月 ${yen(eachTotal-bundleTotal)}（年 約${yen((eachTotal-bundleTotal)*12)}）お得</strong>な目安です。家族割は「まとめないと損」と思われがちですが、割引額そのものは1人あたり月100〜110円程度の会社も多く、基本料の安い会社にそろえることで初めて効いてきます。`
+          : `この使い方では、<strong>バラバラに一番安いプランを選ぶ方が月 ${yen(bundleTotal-eachTotal)}（年 約${yen((bundleTotal-eachTotal)*12)}）お得</strong>な目安です。家族割の割引額（1人あたり月${yen(bestBundle.disc)}）より、プラン自体の基本料の差の方が大きいためです。「家族でまとめているから得」とは限らないことが分かります。`}
+        ${carrierNote}</p>
+        <p style="font-size:12.5px;color:var(--muted);margin:6px 0 0">※家族全員があなたと同じデータ量・通話量と仮定した概算です。実際の使用量は人によって違うため、あくまで「まとめる／まとめない」の判断材料として使ってください。大手キャリアの家族割は金額がプラン・人数で変動するため、この比較には含めていません。</p></div>`;
+      }
+    }
+
+    /* 注意点 */
+    html += `<div class="card2"><h3>確認しておくこと</h3>`;
+    if(checked.length===0){
+      html += `<p style="font-size:14.5px;margin:0">大きな落とし穴は少なそうです。それでも、更新月と端末の残債だけは契約ページで確認しておくと安心です。直近3か月のデータ使用量も確認すると、プラン選びがぶれません。</p>`;
+    } else {
+      for(const k of checked){ const n=PITFALL_NOTES[k]; if(n) html += `<div class="note-card"><h4>${n[0]}</h4><p>${n[1]}</p></div>`; }
+    }
+    if(homeSel.value==="hikari"){
+      html += `<div class="note-card"><h4>光回線の見直しポイント</h4><p>回線とプロバイダーが別契約のことがあります。月額は合計で確認してください。スマホとのセット割が使える組み合わせだと、スマホ側の実質料金がさらに下がる場合があります。</p></div>`;
+    }
+    html += `</div>`;
+
+    /* 手順チェックリスト */
+    const steps=["今の契約ページで、更新月・端末残債・今月のデータ使用量を確認する"];
+    if(state.pitfalls.has("mail")) steps.push("キャリアメールを登録しているサービスを洗い出し、連絡先を変更するか持ち運びを申し込む");
+    if(state.pitfalls.has("pay")) steps.push("キャリア決済で払っているサブスクの支払い方法を、クレジットカード等に変更する");
+    if(state.pitfalls.has("set")) steps.push("家族割・セット割の割引額（実額）と、家族への影響を確認する");
+    steps.push("乗り換え先に申し込む（番号そのままのMNPは、対応会社同士なら予約番号なしのワンストップが使える場合がある）");
+    steps.push("SIM／eSIMを入れ替えて開通し、通話・データ通信・SMS受信をテストする");
+    if(state.pitfalls.has("sms")) steps.push("SMS認証を使う主要サービスで、受信テストをする");
+    steps.push("旧回線の最終請求（端末代の継続支払い・解除料の有無）を確認する");
+    if(state.home.has("home_rental")) steps.push("レンタル機器の返却方法と期日を確認し、返却する");
+    html += `<div class="card2"><h3>あなたの乗り換え手順チェックリスト</h3>
+      <p style="font-size:13px;color:var(--muted);margin:0">終わったものからタップしてチェックできます。</p>
+      <div class="meter"><i id="todoMeter"></i></div><div id="todoList">`;
+    steps.forEach((s,i)=>{ html += `<label class="todo"><input type="checkbox" class="todoChk"><span>${s}</span></label>`; });
+    html += `</div><p id="todoCount" style="font-size:13px;color:var(--muted)">0 / ${steps.length} 完了</p></div>`;
+
+    html += `<div class="btnrow"><button type="button" class="subbtn" id="printBtn">🖨 印刷／PDFで保存</button><button type="button" class="subbtn" id="copyBtn">📋 結果をコピー</button></div>`;
   }
 
-  /* 比較表 */
-  if(cands.length>1){
-    html += `<h3 style="margin:14px 0 4px;font-size:15.5px">候補の比較（通話の目安込み）</h3><table class="cmp"><tr><th>プラン</th><th>月額目安</th><th>容量</th></tr>`;
-    for(const c of cands.slice(0,5)){
-      html += `<tr><td>${c.plan.name}${c.planName?`（${c.planName}）`:""}</td><td>${yen(c.total)}</td><td>〜${c.cap===Infinity?"無制限":c.cap+"GB"}</td></tr>`;
-    }
-    html += `</table>`;
-  }
+  R.innerHTML=html;
+  showStep(5);
 
-  /* 注意点 */
-  html += `<h3 style="margin:14px 0 6px;font-size:15.5px">確認しておくこと</h3>`;
-  if(checked.length===0){
-    html += `<p style="font-size:14.5px">大きな落とし穴は少なそうです。それでも、更新月と端末の残債だけは契約ページで確認しておくと安心です。あわせて、直近3か月のデータ使用量を確認するとプラン選びがぶれません。</p>`;
-  } else {
-    for(const k of checked){ const n=PITFALL_NOTES[k]; if(n) html += `<div class="note-card"><h4>${n[0]}</h4><p>${n[1]}</p></div>`; }
-  }
-  if(homeSel.value==="hikari"){
-    html += `<div class="note-card"><h4>光回線の見直しポイント</h4><p>回線とプロバイダーが別契約のことがあります。月額は合計で確認してください。スマホとのセット割が使える組み合わせだと、スマホ側の実質料金がさらに下がる場合があります。</p></div>`;
-  }
-
-  /* 手順チェックリスト */
-  const steps=["今の契約ページで、更新月・端末残債・今月のデータ使用量を確認する"];
-  if(checked.includes("mail")) steps.push("キャリアメールを登録しているサービスを洗い出し、連絡先を変更するか持ち運びを申し込む");
-  if(checked.includes("pay")) steps.push("キャリア決済で払っているサブスクの支払い方法を、クレジットカード等に変更する");
-  if(checked.includes("set")) steps.push("家族割・セット割の割引額（実額）と、家族への影響を確認する");
-  steps.push("乗り換え先に申し込む（番号そのままのMNPは、対応会社同士なら予約番号なしのワンストップが使える場合がある）");
-  steps.push("SIM／eSIMを入れ替えて開通し、通話・データ通信・SMS受信をテストする");
-  if(checked.includes("sms")) steps.push("SMS認証を使う主要サービスで、受信テストをする");
-  steps.push("旧回線の最終請求（端末代の継続支払い・解除料の有無）を確認する");
-  if(checked.includes("home_rental")) steps.push("レンタル機器の返却方法と期日を確認し、返却する");
-  html += `<h3 style="margin:14px 0 4px;font-size:15.5px">あなたの乗り換え手順チェックリスト</h3><ol class="steps">` + steps.map(s=>`<li>${s}</li>`).join("") + `</ol>`;
-
-  html += `<div class="btnrow"><button type="button" class="subbtn" id="printBtn">結果を印刷／PDFで保存</button>
-  <button type="button" class="subbtn" id="copyBtn">結果をコピーする</button></div>`;
-  html += `</section>`;
-  R.innerHTML = html; R.style.display="block";
-  R.scrollIntoView({behavior:"smooth"});
-
-  document.getElementById("printBtn").addEventListener("click", ()=>window.print());
-  document.getElementById("copyBtn").addEventListener("click", (e)=>{
-    const text = R.innerText;
-    if(navigator.clipboard) navigator.clipboard.writeText(text);
-    e.target.textContent="コピーしました";
+  const chks=R.querySelectorAll(".todoChk");
+  chks.forEach(c=>c.addEventListener("change", ()=>{
+    const done=[...chks].filter(x=>x.checked).length;
+    chks.forEach(x=>x.closest(".todo").classList.toggle("done", x.checked));
+    const m=document.getElementById("todoMeter"), t=document.getElementById("todoCount");
+    if(m) m.style.width=(done/chks.length*100)+"%";
+    if(t) t.textContent=`${done} / ${chks.length} 完了`;
+  }));
+  const pb=document.getElementById("printBtn");
+  if(pb) pb.addEventListener("click", ()=>window.print());
+  const cb=document.getElementById("copyBtn");
+  if(cb) cb.addEventListener("click", ()=>{
+    if(navigator.clipboard) navigator.clipboard.writeText(R.innerText);
+    cb.textContent="✓ コピーしました";
   });
 });
 </script>
