@@ -119,6 +119,37 @@
   .foot{font-size:12.5px;color:var(--muted);margin-top:16px}
   .hidden{display:none !important}
 </style>
+
+  <style id="yasashii">
+  /* ===== やさしい版（v5試作）：文字とボタンを大きく、押しやすく ===== */
+  body{font-size:17px;line-height:1.85}
+  .hero h1{font-size:30px}
+  .hero p{font-size:16px}
+  .hero .chips span{font-size:14px;padding:7px 14px}
+  .panel h2{font-size:24px;line-height:1.5}
+  .sub{font-size:15.5px}
+  .lab{font-size:16.5px}
+  .selcard{padding:17px 15px;font-size:16.5px;gap:12px}
+  .selcard small{font-size:13.5px}
+  .selcard .ic{font-size:23px}
+  .selcard .tick{font-size:19px}
+  .btn{padding:17px 20px;font-size:17.5px;min-height:60px;border-radius:14px}
+  select.big,input.big{font-size:17px;padding:16px 14px;min-height:60px}
+  .st{font-size:12.5px}
+  .pick h3{font-size:25px}
+  .pick .price{font-size:44px}
+  .pick p{font-size:15.5px}
+  .pick .save{font-size:16.5px;padding:8px 14px}
+  .pick a.officialBtn{font-size:17.5px;padding:18px}
+  .card2 h3{font-size:19.5px}
+  .card2 p,.note-card p{font-size:15.5px}
+  .note-card h4{font-size:16.5px}
+  table.cmp{font-size:15px}
+  table.cmp td,table.cmp th{padding:11px 9px}
+  .altLink{font-size:16px;padding:14px 18px}
+  .todo{font-size:15.5px;padding:13px 10px}
+  .foot{font-size:13px;line-height:1.8}
+  </style>
 </head>
 <body>
 <div class="wrap">
@@ -126,7 +157,7 @@
   <div class="hero">
     <h1>スマホ代、<br>払いすぎていませんか？</h1>
     <p>4つのステップに答えるだけで、あなたに合う具体的なプランを1つ選んで、通話料込みの月額と、いまとの差額をお見せします。入力内容は保存されず、この画面の中だけで使われます。</p>
-    <div class="chips"><span>⏱ 約3分</span><span>📝 登録不要</span><span>🔒 入力は保存されません</span></div>
+    <div class="chips"><span>💰 ずっと無料</span><span>⏱ 約3分</span><span>📝 登録不要</span><span>🔒 入力は保存されません</span></div>
   </div>
 
   <div class="progress">
@@ -142,7 +173,7 @@
 
   <!-- STEP 1 -->
   <section class="panel" data-panel="1">
-    <h2>乗り換えで困りやすいこと</h2>
+    <h2>今のスマホ契約で、気になること</h2>
     <p class="sub">当てはまるものをタップしてください（いくつでも）。結果に個別の注意点として表示されます。</p>
     <div class="grid" id="pitfalls"></div>
     <div class="navrow"><button class="btn primary" data-next>次へ ― 使い方の入力</button></div>
@@ -166,7 +197,7 @@
     <h2>いまの使い方と、大事にしたいこと</h2>
     <p class="sub">分かる範囲で大丈夫です。空欄や「分からない」でも診断できます。</p>
     <div class="field">
-      <span class="lab">月のデータ使用量</span>
+      <span class="lab">月のデータ使用量（ギガ）</span>
       <select class="big" id="dataSel">
         <option value="unknown">分からない（10〜20GBとして計算）</option>
         <option value="3">3GBまで</option>
@@ -186,8 +217,17 @@
     </div>
     <div class="field">
       <span class="lab">いまのスマホ代（月額）</span>
-      <div class="feebox"><span>¥</span><input type="number" id="feeInput" inputmode="numeric" placeholder="6500"><span>／月</span></div>
-      <p class="hint">端末代の分割払いは除いた、通信料とオプションの合計で入れてください。空欄でも使えます。</p>
+      <select class="big" id="feeInput">
+        <option value="">分からない</option>
+        <option value="1500">〜2,000円くらい</option>
+        <option value="2500">2,000〜3,000円くらい</option>
+        <option value="3500">3,000〜4,000円くらい</option>
+        <option value="4500">4,000〜5,000円くらい</option>
+        <option value="6000">5,000〜7,000円くらい</option>
+        <option value="8500">7,000〜10,000円くらい</option>
+        <option value="11000">10,000円以上</option>
+      </select>
+      <p class="hint">端末代の分割払いは除いた、通信料とオプションの合計で選んでください。「分からない」でも使えます。</p>
     </div>
     <div class="field">
       <span class="lab">一番大事にしたいこと</span>
@@ -227,7 +267,45 @@
         <option value="none">自宅の回線は使っていない</option>
         <option value="hikari">光回線</option>
         <option value="router">ホームルーター（置くだけWi-Fi）</option>
+        <option value="pocket">ポケットWi-Fi（持ち運びタイプ）</option>
         <option value="unknown">分からない</option>
+      </select>
+    </div>
+    <div id="houseWrap">
+      <span class="lab" style="font-weight:800;font-size:14.5px;color:var(--navy);display:block;margin-bottom:8px">住居タイプ</span>
+      <div class="grid" id="houseGrid">
+        <button type="button" class="selcard on" data-house="house"><span class="ic">🏠</span><span>戸建て<small>ファミリータイプ</small></span><span class="tick">✓</span></button>
+        <button type="button" class="selcard" data-house="mansion"><span class="ic">🏢</span><span>マンション<small>集合住宅タイプ</small></span><span class="tick">✓</span></button>
+      </div>
+    </div>
+    <div class="field" id="curHikariWrap">
+      <span class="lab">今の自宅回線（会社）</span>
+      <select class="big" id="curHikariSel">
+        <option value="unknown">分からない・覚えていない</option>
+        <option value="none">契約していない</option>
+        <option value="softbank">ソフトバンク光</option>
+        <option value="docomo">ドコモ光</option>
+        <option value="au">auひかり</option>
+        <option value="nuro">NURO光</option>
+        <option value="iij">IIJmioひかり</option>
+        <option value="rakuten_h">楽天ひかり</option>
+        <option value="air">ソフトバンクエアー</option>
+        <option value="wimax">WiMAX</option>
+        <option value="home5g">ドコモ home 5G</option>
+        <option value="turbo">楽天Turbo</option>
+        <option value="pocket_other">ポケットWi-Fi（その他）</option>
+        <option value="other">その他</option>
+      </select>
+    </div>
+    <div class="field">
+      <span class="lab">今の自宅回線の月額（分かれば）</span>
+      <select class="big" id="homeFeeInput">
+        <option value="">分からない・契約していない</option>
+        <option value="2500">〜3,000円くらい</option>
+        <option value="3500">3,000〜4,000円くらい</option>
+        <option value="4500">4,000〜5,000円くらい</option>
+        <option value="5500">5,000〜6,000円くらい</option>
+        <option value="6500">6,000円以上</option>
       </select>
     </div>
     <div id="homeChecksWrap" class="hidden">
@@ -366,7 +444,7 @@ const PRIO_UI = [
 const APP_ICONS = {video:"🎬", short:"🎵", sns:"📱", line:"💬", music:"🎧", game:"🎮", map:"🗺️", web:"📰", meeting:"💻"};
 
 /* ===== 状態 ===== */
-const state = { pitfalls:new Set(), home:new Set(), apps:{}, prio:"cheap" };
+const state = {house:"house", pitfalls:new Set(), home:new Set(), apps:{}, prio:"cheap" };
 APPS.forEach(a=>state.apps[a.key]="none");
 
 /* ===== 選択カード生成 ===== */
@@ -456,6 +534,52 @@ const homeSel=document.getElementById("homeSel");
 homeSel.addEventListener("change", ()=>{
   document.getElementById("homeChecksWrap").classList.toggle("hidden", homeSel.value==="none");
 });
+
+/* 住居タイプ（単一選択） */
+document.querySelectorAll("#houseGrid .selcard").forEach(b=>{
+  b.addEventListener("click", ()=>{
+    document.querySelectorAll("#houseGrid .selcard").forEach(x=>x.classList.remove("on"));
+    b.classList.add("on");
+    state.house=b.dataset.house;
+  });
+});
+
+/* ===== 光回線DB（2026年10月確認・税込の基本月額、キャンペーン除く） ===== */
+const HIKARI = [
+  { id:"softbank", name:"ソフトバンク光", house:5720, mansion:4180, option:550, url:"https://www.softbank.jp/internet/sbhikari/",
+    pair:{ ymobile:{S:1100,M:1650,L:1650} }, pairNote:"おうち割 光セット（ワイモバイル：プランにより月1,100〜1,650円）。適用には指定オプション月550円が必要です", area:"全国（フレッツ光の提供エリア）" },
+  { id:"docomo", name:"ドコモ光", house:5720, mansion:4400, option:0, url:"https://www.docomo.ne.jp/internet/hikari/",
+    pair:{}, pairNote:"ドコモの対象プラン向けのセット割があります（ahamoは対象外）", area:"全国（フレッツ光の提供エリア）" },
+  { id:"ahamo_hikari", name:"ahamo光", house:4950, mansion:3630, option:0, url:"https://ahamo.com/", onlyPlan:"ahamo",
+    pair:{}, pairNote:"ahamo契約者専用の光回線。セット割はありませんが月額が安めです", area:"全国（フレッツ光の提供エリア）" },
+  { id:"au", name:"auひかり", house:5610, mansion:4180, option:0, url:"https://www.au.com/internet/auhikari/",
+    pair:{ uq:1100 }, pairNote:"自宅セット割（UQ mobile：月1,100円）", area:"エリア限定（沖縄県と一部地域は対象外）。戸建ては契約年数、マンションは建物で料金が変わります" },
+  { id:"nuro", name:"NURO光", house:5200, mansion:5200, option:0, url:"https://www.nuro.jp/hikari/",
+    pair:{}, pairNote:"セット割はありません。速度の速さが売りです", area:"エリア限定（関東・東海・関西・九州の一部など）" },
+  { id:"iij", name:"IIJmioひかり", house:5456, mansion:4356, option:0, url:"https://www.iijmio.jp/imh/",
+    pair:{ iijmio:660 }, pairNote:"mio割（IIJmioのSIMと同じmioIDで契約すると光回線から月660円引き）", area:"全国（フレッツ光の提供エリア）" },
+  { id:"rakuten_h", name:"楽天ひかり", house:5280, mansion:4180, option:0, url:"https://hikari.rakuten.co.jp/",
+    pair:{}, pairNote:"楽天モバイル向けの期間限定キャンペーンは計算に含めていません", area:"全国（フレッツ光の提供エリア）" },
+];
+/* ===== ホームルーター／ポケットWi-Fi DB（2026年10月確認・税込の基本月額、キャンペーン除く） ===== */
+const ROUTERS = [
+  { id:"wimax", name:"WiMAX +5G（UQ）", fee:4268, url:"https://www.uqwimax.jp/", pair:{ uq:1100 },
+    pairNote:"自宅セット割（UQ mobile：月1,100円）の対象です。持ち運びもできます", area:"WiMAX +5Gのエリア内。月額は26か月目以降4,950円です" },
+  { id:"rakuten_turbo", name:"楽天Turbo", fee:4840, url:"https://network.mobile.rakuten.co.jp/", pair:{},
+    pairNote:"楽天モバイルと相性がよい置くだけWi-Fiです（セット割はありません）", area:"楽天モバイルのエリア内" },
+  { id:"home5g", name:"ドコモ home 5G", fee:4950, url:"https://www.docomo.ne.jp/home_5g/", pair:{},
+    pairNote:"ドコモの置くだけWi-Fiです（ahamoはセット割の対象外）", area:"ドコモのエリア内" },
+  { id:"softbank_air", name:"ソフトバンクエアー", fee:5368, url:"https://www.softbank.jp/internet/air/", pair:{ ymobile:{S:1100,M:1650,L:1650} },
+    pairNote:"おうち割 光セット（ワイモバイル：プランにより月1,100〜1,650円）の対象です", area:"ソフトバンクのエリア内" },
+];
+const CUR2REC = { air:"softbank_air", wimax:"wimax", home5g:"home5g", turbo:"rakuten_turbo" };
+
+function hikariSetDisc(h, top){
+  const p=h.pair[top.plan.id]; if(!p) return 0;
+  if(typeof p==="number") return p;
+  const m=(top.planName||"").match(/\b(S|M|L)\b/); const k=m?m[1]:"M";
+  return p[k] ?? p.M ?? 0;
+}
 
 /* ===== ステップ遷移 ===== */
 let curStep=1;
@@ -572,15 +696,51 @@ document.getElementById("runBtn").addEventListener("click", ()=>{
       }
     }
 
+    /* 自宅回線のおすすめ */
+    {
+      const cur=document.getElementById("curHikariSel").value;
+      const hfRaw=document.getElementById("homeFeeInput").value;
+      const hf=parseFloat(hfRaw);
+      const curFee=(!Number.isNaN(hf)&&hf>0)?hf:null;
+      const hList=HIKARI.filter(h=>!h.onlyPlan || h.onlyPlan===top.plan.id).map(h=>{
+        const fee=(state.house==="mansion"?h.mansion:h.house)+h.option;
+        const disc=hikariSetDisc(h, top);
+        return {h, fee, disc, net:fee-disc};
+      }).sort((a,b)=>a.net-b.net);
+      const rList=ROUTERS.map(h=>{
+        const disc=hikariSetDisc({pair:h.pair}, top);
+        return {h, fee:h.fee, disc, net:h.fee-disc};
+      }).sort((a,b)=>a.net-b.net);
+      const wantRouter = (homeSel.value==="router" || homeSel.value==="pocket");
+      const list = wantRouter ? rList : hList;
+      const other = wantRouter ? hList[0] : rList[0];
+      const hb=list[0], ha=list[1];
+      const curRecId = CUR2REC[cur] || cur;
+      const isStay = hb && curRecId===hb.h.id;
+      const kindLabel = wantRouter ? (homeSel.value==="pocket"?"ポケットWi-Fi":"ホームルーター") : "光回線";
+      html += `<div class="card2"><h3>🏠 自宅回線のおすすめ（${wantRouter?kindLabel+"・工事なし":(state.house==="mansion"?"マンション":"戸建て")+"・スマホとのセット割込み"}）</h3>`;
+      if(hb){
+        html += `<p style="margin:0"><strong>${isStay?"今の回線が最有力です：":"おすすめ："}${hb.h.name} ― 月 ${yen(hb.net)}</strong><br>
+        <span style="font-size:14px">内訳：基本 ${yen(hb.fee)}${hb.disc?` ＋ セット割 −${yen(hb.disc)}`:""}／スマホのおすすめ（${top.plan.name} 月 ${yen(top.total)}）と合わせると <strong>合計 月 ${yen(top.total+hb.net)}</strong> の目安です。<br>${hb.h.pairNote}。提供エリア：${hb.h.area}。</span></p>`;
+        if(curFee!==null && !isStay){
+          const d=curFee-hb.net;
+          html += d>0?`<p style="margin:8px 0 0"><span class="save">💴 自宅回線だけでも いまより 月 約${yen(d)} ／ 年間 約${yen(d*12)} 下がる目安</span></p>`:`<p style="font-size:14px;margin:8px 0 0">今の自宅回線の月額とほぼ同等か、条件次第では高くなります。解約費用も含めて判断してください。</p>`;
+        }
+        if(isStay) html += `<p style="font-size:14px;margin:8px 0 0">乗り換えの手間をかける必要はなさそうです。今の契約の更新月だけ確認しておきましょう。</p>`;
+        html += `<a class="altLink" href="${hb.h.url}">公式サイトでエリアと最新料金を確認する ↗</a>`;
+        if(ha && !isStay) html += `<p style="font-size:13.5px;color:var(--muted);margin:10px 0 0">次点：${ha.h.name} ― 月 ${yen(ha.net)}（合計 月 ${yen(top.total+ha.net)}）※${ha.h.area}</p>`;
+        if(other) html += `<p style="font-size:13.5px;color:var(--muted);margin:10px 0 0">${wantRouter?`光回線が引ける住居なら：${other.h.name} ― 月 ${yen(other.net)}（合計 月 ${yen(top.total+other.net)}）も候補です`:`工事ができない・したくない場合はホームルーターも候補です：${other.h.name} ― 月 ${yen(other.net)}（合計 月 ${yen(top.total+other.net)}）`}</p>`;
+        html += `<p style="font-size:12.5px;color:var(--muted);margin:8px 0 0">※月額は2026年10月に確認した税込の基本料金です。キャンペーン価格・工事費・端末代・解約費用は含みません。エリアや建物で可否と料金が変わるため、必ず公式サイトで確認してください。</p>`;
+      }
+      html += `</div>`;
+    }
+
     /* 注意点 */
     html += `<div class="card2"><h3>確認しておくこと</h3>`;
     if(checked.length===0){
       html += `<p style="font-size:14.5px;margin:0">大きな落とし穴は少なそうです。それでも、更新月と端末の残債だけは契約ページで確認しておくと安心です。直近3か月のデータ使用量も確認すると、プラン選びがぶれません。</p>`;
     } else {
       for(const k of checked){ const n=PITFALL_NOTES[k]; if(n) html += `<div class="note-card"><h4>${n[0]}</h4><p>${n[1]}</p></div>`; }
-    }
-    if(homeSel.value==="hikari"){
-      html += `<div class="note-card"><h4>光回線の見直しポイント</h4><p>回線とプロバイダーが別契約のことがあります。月額は合計で確認してください。スマホとのセット割が使える組み合わせだと、スマホ側の実質料金がさらに下がる場合があります。</p></div>`;
     }
     html += `</div>`;
 
@@ -594,7 +754,7 @@ document.getElementById("runBtn").addEventListener("click", ()=>{
     if(state.pitfalls.has("sms")) steps.push("SMS認証を使う主要サービスで、受信テストをする");
     steps.push("旧回線の最終請求（端末代の継続支払い・解除料の有無）を確認する");
     if(state.home.has("home_rental")) steps.push("レンタル機器の返却方法と期日を確認し、返却する");
-    html += `<div class="card2"><h3>あなたの乗り換え手順チェックリスト</h3>
+    html += `<div class="card2"><h3>あなたの見直し手順チェックリスト</h3>
       <p style="font-size:13px;color:var(--muted);margin:0">終わったものからタップしてチェックできます。</p>
       <div class="meter"><i id="todoMeter"></i></div><div id="todoList">`;
     steps.forEach((s,i)=>{ html += `<label class="todo"><input type="checkbox" class="todoChk"><span>${s}</span></label>`; });
