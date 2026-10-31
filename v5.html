@@ -267,6 +267,7 @@
         <option value="none">自宅の回線は使っていない</option>
         <option value="hikari">光回線</option>
         <option value="router">ホームルーター（置くだけWi-Fi）</option>
+        <option value="pocket">ポケットWi-Fi（持ち運びタイプ）</option>
         <option value="unknown">分からない</option>
       </select>
     </div>
@@ -288,6 +289,11 @@
         <option value="nuro">NURO光</option>
         <option value="iij">IIJmioひかり</option>
         <option value="rakuten_h">楽天ひかり</option>
+        <option value="air">ソフトバンクエアー</option>
+        <option value="wimax">WiMAX</option>
+        <option value="home5g">ドコモ home 5G</option>
+        <option value="turbo">楽天Turbo</option>
+        <option value="pocket_other">ポケットWi-Fi（その他）</option>
         <option value="other">その他</option>
       </select>
     </div>
@@ -555,6 +561,19 @@ const HIKARI = [
   { id:"rakuten_h", name:"楽天ひかり", house:5280, mansion:4180, option:0, url:"https://hikari.rakuten.co.jp/",
     pair:{}, pairNote:"楽天モバイル向けの期間限定キャンペーンは計算に含めていません", area:"全国（フレッツ光の提供エリア）" },
 ];
+/* ===== ホームルーター／ポケットWi-Fi DB（2026年10月確認・税込の基本月額、キャンペーン除く） ===== */
+const ROUTERS = [
+  { id:"wimax", name:"WiMAX +5G（UQ）", fee:4268, url:"https://www.uqwimax.jp/", pair:{ uq:1100 },
+    pairNote:"自宅セット割（UQ mobile：月1,100円）の対象です。持ち運びもできます", area:"WiMAX +5Gのエリア内。月額は26か月目以降4,950円です" },
+  { id:"rakuten_turbo", name:"楽天Turbo", fee:4840, url:"https://network.mobile.rakuten.co.jp/", pair:{},
+    pairNote:"楽天モバイルと相性がよい置くだけWi-Fiです（セット割はありません）", area:"楽天モバイルのエリア内" },
+  { id:"home5g", name:"ドコモ home 5G", fee:4950, url:"https://www.docomo.ne.jp/home_5g/", pair:{},
+    pairNote:"ドコモの置くだけWi-Fiです（ahamoはセット割の対象外）", area:"ドコモのエリア内" },
+  { id:"softbank_air", name:"ソフトバンクエアー", fee:5368, url:"https://www.softbank.jp/internet/air/", pair:{ ymobile:{S:1100,M:1650,L:1650} },
+    pairNote:"おうち割 光セット（ワイモバイル：プランにより月1,100〜1,650円）の対象です", area:"ソフトバンクのエリア内" },
+];
+const CUR2REC = { air:"softbank_air", wimax:"wimax", home5g:"home5g", turbo:"rakuten_turbo" };
+
 function hikariSetDisc(h, top){
   const p=h.pair[top.plan.id]; if(!p) return 0;
   if(typeof p==="number") return p;
@@ -680,28 +699,38 @@ document.getElementById("runBtn").addEventListener("click", ()=>{
     /* 自宅回線のおすすめ */
     {
       const cur=document.getElementById("curHikariSel").value;
-      const hf=parseFloat(document.getElementById("homeFeeInput").value);
+      const hfRaw=document.getElementById("homeFeeInput").value;
+      const hf=parseFloat(hfRaw);
       const curFee=(!Number.isNaN(hf)&&hf>0)?hf:null;
-      const list=HIKARI.filter(h=>!h.onlyPlan || h.onlyPlan===top.plan.id).map(h=>{
+      const hList=HIKARI.filter(h=>!h.onlyPlan || h.onlyPlan===top.plan.id).map(h=>{
         const fee=(state.house==="mansion"?h.mansion:h.house)+h.option;
         const disc=hikariSetDisc(h, top);
         return {h, fee, disc, net:fee-disc};
       }).sort((a,b)=>a.net-b.net);
+      const rList=ROUTERS.map(h=>{
+        const disc=hikariSetDisc({pair:h.pair}, top);
+        return {h, fee:h.fee, disc, net:h.fee-disc};
+      }).sort((a,b)=>a.net-b.net);
+      const wantRouter = (homeSel.value==="router" || homeSel.value==="pocket");
+      const list = wantRouter ? rList : hList;
+      const other = wantRouter ? hList[0] : rList[0];
       const hb=list[0], ha=list[1];
-      const isStay = hb && cur===hb.h.id;
-      html += `<div class="card2"><h3>🏠 自宅回線のおすすめ（${state.house==="mansion"?"マンション":"戸建て"}・スマホとのセット割込み）</h3>`;
+      const curRecId = CUR2REC[cur] || cur;
+      const isStay = hb && curRecId===hb.h.id;
+      const kindLabel = wantRouter ? (homeSel.value==="pocket"?"ポケットWi-Fi":"ホームルーター") : "光回線";
+      html += `<div class="card2"><h3>🏠 自宅回線のおすすめ（${wantRouter?kindLabel+"・工事なし":(state.house==="mansion"?"マンション":"戸建て")+"・スマホとのセット割込み"}）</h3>`;
       if(hb){
-        html += `<p style="margin:0"><strong>${isStay?"今の回線が最有力です：":"おすすめ："}${hb.h.name} ― 光 月 ${yen(hb.net)}</strong><br>
+        html += `<p style="margin:0"><strong>${isStay?"今の回線が最有力です：":"おすすめ："}${hb.h.name} ― 月 ${yen(hb.net)}</strong><br>
         <span style="font-size:14px">内訳：基本 ${yen(hb.fee)}${hb.disc?` ＋ セット割 −${yen(hb.disc)}`:""}／スマホのおすすめ（${top.plan.name} 月 ${yen(top.total)}）と合わせると <strong>合計 月 ${yen(top.total+hb.net)}</strong> の目安です。<br>${hb.h.pairNote}。提供エリア：${hb.h.area}。</span></p>`;
         if(curFee!==null && !isStay){
           const d=curFee-hb.net;
-          html += d>0?`<p style="margin:8px 0 0"><span class="save">💴 自宅回線だけでも いまより 月 約${yen(d)} ／ 年間 約${yen(d*12)} 下がる目安</span></p>`:`<p style="font-size:14px;margin:8px 0 0">今の自宅回線の月額とほぼ同等か、条件次第では高くなります。工事や解約費用も含めて判断してください。</p>`;
+          html += d>0?`<p style="margin:8px 0 0"><span class="save">💴 自宅回線だけでも いまより 月 約${yen(d)} ／ 年間 約${yen(d*12)} 下がる目安</span></p>`:`<p style="font-size:14px;margin:8px 0 0">今の自宅回線の月額とほぼ同等か、条件次第では高くなります。解約費用も含めて判断してください。</p>`;
         }
         if(isStay) html += `<p style="font-size:14px;margin:8px 0 0">乗り換えの手間をかける必要はなさそうです。今の契約の更新月だけ確認しておきましょう。</p>`;
         html += `<a class="altLink" href="${hb.h.url}">公式サイトでエリアと最新料金を確認する ↗</a>`;
-        if(ha && !isStay) html += `<p style="font-size:13.5px;color:var(--muted);margin:10px 0 0">次点：${ha.h.name} ― 光 月 ${yen(ha.net)}（合計 月 ${yen(top.total+ha.net)}）※${ha.h.area}</p>`;
-        if(homeSel.value==="router") html += `<p style="font-size:13.5px;color:var(--muted);margin:10px 0 0">※ホームルーターを使っている場合、光回線が引ける住居なら上の比較が参考になります。工事ができない場合は、楽天Turbo（月4,840円目安）などのホームルーター同士の比較になります。</p>`;
-        html += `<p style="font-size:12.5px;color:var(--muted);margin:8px 0 0">※光回線の月額は2026年10月に確認した税込の基本料金です。キャンペーン価格・工事費・解約費用は含みません。マンションは建物の配線方式で料金や可否が変わるため、必ず公式サイトで提供エリアと最新料金を確認してください。</p>`;
+        if(ha && !isStay) html += `<p style="font-size:13.5px;color:var(--muted);margin:10px 0 0">次点：${ha.h.name} ― 月 ${yen(ha.net)}（合計 月 ${yen(top.total+ha.net)}）※${ha.h.area}</p>`;
+        if(other) html += `<p style="font-size:13.5px;color:var(--muted);margin:10px 0 0">${wantRouter?`光回線が引ける住居なら：${other.h.name} ― 月 ${yen(other.net)}（合計 月 ${yen(top.total+other.net)}）も候補です`:`工事ができない・したくない場合はホームルーターも候補です：${other.h.name} ― 月 ${yen(other.net)}（合計 月 ${yen(top.total+other.net)}）`}</p>`;
+        html += `<p style="font-size:12.5px;color:var(--muted);margin:8px 0 0">※月額は2026年10月に確認した税込の基本料金です。キャンペーン価格・工事費・端末代・解約費用は含みません。エリアや建物で可否と料金が変わるため、必ず公式サイトで確認してください。</p>`;
       }
       html += `</div>`;
     }
