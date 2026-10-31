@@ -550,9 +550,9 @@ const HIKARI = [
     pair:{ ymobile:{S:1100,M:1650,L:1650} }, pairNote:"おうち割 光セット（ワイモバイル：プランにより月1,100〜1,650円）。適用には指定オプション月550円が必要です", area:"全国（フレッツ光の提供エリア）" },
   { id:"docomo", name:"ドコモ光", house:5720, mansion:4400, option:0, url:"https://www.docomo.ne.jp/internet/hikari/",
     pair:{}, pairNote:"ドコモの対象プラン向けのセット割があります（ahamoは対象外）", area:"全国（フレッツ光の提供エリア）" },
-  { id:"ahamo_hikari", name:"ahamo光", house:4950, mansion:3630, option:0, url:"https://ahamo.com/", onlyPlan:"ahamo",
+  { id:"ahamo_hikari", name:"ahamo光", house:4950, mansion:3630, option:0, url:"https://px.a8.net/svt/ejp?a8mat=4BGAUW+2UEKTU+3SPO+CKJSMQ", aff:true, pixel:"https://www13.a8.net/0.gif?a8mat=4BGAUW+2UEKTU+3SPO+CKJSMQ", onlyPlan:"ahamo",
     pair:{}, pairNote:"ahamo契約者専用の光回線。セット割はありませんが月額が安めです", area:"全国（フレッツ光の提供エリア）" },
-  { id:"au", name:"auひかり", house:5610, mansion:4180, option:0, url:"https://www.au.com/internet/auhikari/",
+  { id:"au", name:"auひかり", house:5610, mansion:4180, option:0, url:"https://px.a8.net/svt/ejp?a8mat=4BGAUW+2VLG1E+42Y0+5YRHE", aff:true, pixel:"https://www17.a8.net/0.gif?a8mat=4BGAUW+2VLG1E+42Y0+5YRHE",
     pair:{ uq:1100 }, pairNote:"自宅セット割（UQ mobile：月1,100円）", area:"エリア限定（沖縄県と一部地域は対象外）。戸建ては契約年数、マンションは建物で料金が変わります" },
   { id:"nuro", name:"NURO光", house:5200, mansion:5200, option:0, url:"https://www.nuro.jp/hikari/",
     pair:{}, pairNote:"セット割はありません。速度の速さが売りです", area:"エリア限定（関東・東海・関西・九州の一部など）" },
@@ -727,7 +727,7 @@ document.getElementById("runBtn").addEventListener("click", ()=>{
           html += d>0?`<p style="margin:8px 0 0"><span class="save">💴 自宅回線だけでも いまより 月 約${yen(d)} ／ 年間 約${yen(d*12)} 下がる目安</span></p>`:`<p style="font-size:14px;margin:8px 0 0">今の自宅回線の月額とほぼ同等か、条件次第では高くなります。解約費用も含めて判断してください。</p>`;
         }
         if(isStay) html += `<p style="font-size:14px;margin:8px 0 0">乗り換えの手間をかける必要はなさそうです。今の契約の更新月だけ確認しておきましょう。</p>`;
-        html += `<a class="altLink" href="${hb.h.url}">公式サイトでエリアと最新料金を確認する ↗</a>`;
+        html += `<a class="altLink" href="${hb.h.url}"${hb.h.aff?' rel="nofollow sponsored"':""}>${hb.h.aff?"申込サイト":"公式サイト"}でエリアと最新料金を確認する ↗</a>${hb.h.aff?`<p style="font-size:11px;opacity:.85;margin:8px 0 0">※このリンクはアフィリエイト広告リンクです（PR）。おすすめの順番は料金計算の結果で決めています。</p>`:""}${hb.h.pixel?`<img src="${hb.h.pixel}" width="1" height="1" alt="" style="border:0">`:""}`;
         if(ha && !isStay) html += `<p style="font-size:13.5px;color:var(--muted);margin:10px 0 0">次点：${ha.h.name} ― 月 ${yen(ha.net)}（合計 月 ${yen(top.total+ha.net)}）※${ha.h.area}</p>`;
         if(other) html += `<p style="font-size:13.5px;color:var(--muted);margin:10px 0 0">${wantRouter?`光回線が引ける住居なら：${other.h.name} ― 月 ${yen(other.net)}（合計 月 ${yen(top.total+other.net)}）も候補です`:`工事ができない・したくない場合はホームルーターも候補です：${other.h.name} ― 月 ${yen(other.net)}（合計 月 ${yen(top.total+other.net)}）`}</p>`;
         html += `<p style="font-size:12.5px;color:var(--muted);margin:8px 0 0">※月額は2026年10月に確認した税込の基本料金です。キャンペーン価格・工事費・端末代・解約費用は含みません。エリアや建物で可否と料金が変わるため、必ず公式サイトで確認してください。</p>`;
