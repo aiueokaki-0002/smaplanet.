@@ -173,7 +173,7 @@
 
   <!-- STEP 1 -->
   <section class="panel" data-panel="1">
-    <h2>乗り換えで困りやすいこと</h2>
+    <h2>今のスマホ契約で、気になること</h2>
     <p class="sub">当てはまるものをタップしてください（いくつでも）。結果に個別の注意点として表示されます。</p>
     <div class="grid" id="pitfalls"></div>
     <div class="navrow"><button class="btn primary" data-next>次へ ― 使い方の入力</button></div>
@@ -725,7 +725,7 @@ document.getElementById("runBtn").addEventListener("click", ()=>{
     if(state.pitfalls.has("sms")) steps.push("SMS認証を使う主要サービスで、受信テストをする");
     steps.push("旧回線の最終請求（端末代の継続支払い・解除料の有無）を確認する");
     if(state.home.has("home_rental")) steps.push("レンタル機器の返却方法と期日を確認し、返却する");
-    html += `<div class="card2"><h3>あなたの乗り換え手順チェックリスト</h3>
+    html += `<div class="card2"><h3>あなたの見直し手順チェックリスト</h3>
       <p style="font-size:13px;color:var(--muted);margin:0">終わったものからタップしてチェックできます。</p>
       <div class="meter"><i id="todoMeter"></i></div><div id="todoList">`;
     steps.forEach((s,i)=>{ html += `<label class="todo"><input type="checkbox" class="todoChk"><span>${s}</span></label>`; });
