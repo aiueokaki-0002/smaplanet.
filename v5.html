@@ -217,8 +217,17 @@
     </div>
     <div class="field">
       <span class="lab">いまのスマホ代（月額）</span>
-      <div class="feebox"><span>¥</span><input type="number" id="feeInput" inputmode="numeric" placeholder="6500"><span>／月</span></div>
-      <p class="hint">端末代の分割払いは除いた、通信料とオプションの合計で入れてください。空欄でも使えます。</p>
+      <select class="big" id="feeInput">
+        <option value="">分からない</option>
+        <option value="1500">〜2,000円くらい</option>
+        <option value="2500">2,000〜3,000円くらい</option>
+        <option value="3500">3,000〜4,000円くらい</option>
+        <option value="4500">4,000〜5,000円くらい</option>
+        <option value="6000">5,000〜7,000円くらい</option>
+        <option value="8500">7,000〜10,000円くらい</option>
+        <option value="11000">10,000円以上</option>
+      </select>
+      <p class="hint">端末代の分割払いは除いた、通信料とオプションの合計で選んでください。「分からない」でも使えます。</p>
     </div>
     <div class="field">
       <span class="lab">一番大事にしたいこと</span>
@@ -284,7 +293,14 @@
     </div>
     <div class="field">
       <span class="lab">今の自宅回線の月額（分かれば）</span>
-      <input class="big" id="homeFeeInput" type="number" inputmode="numeric" placeholder="例：5200" min="0" step="10">
+      <select class="big" id="homeFeeInput">
+        <option value="">分からない・契約していない</option>
+        <option value="2500">〜3,000円くらい</option>
+        <option value="3500">3,000〜4,000円くらい</option>
+        <option value="4500">4,000〜5,000円くらい</option>
+        <option value="5500">5,000〜6,000円くらい</option>
+        <option value="6500">6,000円以上</option>
+      </select>
     </div>
     <div id="homeChecksWrap" class="hidden">
       <span class="lab" style="font-weight:800;font-size:14.5px;color:var(--navy);display:block;margin-bottom:8px">自宅回線で当てはまるもの</span>
