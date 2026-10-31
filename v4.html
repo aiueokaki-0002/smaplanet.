@@ -233,8 +233,8 @@
     <div id="houseWrap">
       <span class="lab" style="font-weight:800;font-size:14.5px;color:var(--navy);display:block;margin-bottom:8px">住居タイプ</span>
       <div class="grid" id="houseGrid">
-        <button type="button" class="opt on" data-house="house"><span class="ic">🏠</span>戸建て<small>ファミリータイプ</small></button>
-        <button type="button" class="opt" data-house="mansion"><span class="ic">🏢</span>マンション<small>集合住宅タイプ</small></button>
+        <button type="button" class="selcard on" data-house="house"><span class="ic">🏠</span><span>戸建て<small>ファミリータイプ</small></span><span class="tick">✓</span></button>
+        <button type="button" class="selcard" data-house="mansion"><span class="ic">🏢</span><span>マンション<small>集合住宅タイプ</small></span><span class="tick">✓</span></button>
       </div>
     </div>
     <div class="field" id="curHikariWrap">
@@ -483,9 +483,9 @@ homeSel.addEventListener("change", ()=>{
 });
 
 /* 住居タイプ（単一選択） */
-document.querySelectorAll("#houseGrid .opt").forEach(b=>{
+document.querySelectorAll("#houseGrid .selcard").forEach(b=>{
   b.addEventListener("click", ()=>{
-    document.querySelectorAll("#houseGrid .opt").forEach(x=>x.classList.remove("on"));
+    document.querySelectorAll("#houseGrid .selcard").forEach(x=>x.classList.remove("on"));
     b.classList.add("on");
     state.house=b.dataset.house;
   });
