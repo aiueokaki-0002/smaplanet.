@@ -244,7 +244,7 @@
   </section>
 
   <p class="foot">
-    料金は2026年10月に公開情報で確認した税込・割引前の基本料金です（販売前に各社公式で再確認します）。キャンペーン価格は含みません。節約額は目安で、保証するものではありません。申込前に必ず各社の公式サイトで最新の料金と条件を確認してください。<br>
+    料金は2026年10月に公開情報で確認した税込・割引前の基本料金です（販売前に各社公式で再確認します）。キャンペーン価格は含みません。節約額は目安で、保証するものではありません。申込前に必ず各社の公式サイトで最新の料金と条件を確認してください。本ページにはアフィリエイト広告リンクが含まれます。リンク経由で申し込みが完了すると、運営者に報酬が支払われる場合があります。おすすめの順番は料金計算の結果のみで決めており、報酬の有無で変えていません。<br>
     ahamoは2026年12月1日から段階制（〜40GB 3,135円／〜60GB 4,125円／〜120GB 5,115円）に改定予定のため、このツールのahamo料金は改定前のものです。
   </p>
 
@@ -310,7 +310,7 @@ const PLANS = [
     callAdd(){ return 0; },
     callNote:"Rakuten Linkアプリ利用で国内通話無料（一部対象外番号あり）。エリアは申込前に公式マップで確認を",
     why:"使った量で自動的に3段階。20GB超は無制限で同額",
-    url:"https://network.mobile.rakuten.co.jp/" },
+    url:"https://rpx.a8.net/svt/ejp?a8mat=4BESUB+5XQMYA+2HOM+BW8O1&rakuten=y&a8ejpredirect=http%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2F0ea62065.34400275.0ea62066.204f04c0%2Fa26103176790_4BESUB_5XQMYA_2HOM_BW8O1%3Fpc%3Dhttps%253A%252F%252Fnetwork.mobile.rakuten.co.jp%252F%26m%3Dhttps%253A%252F%252Fnetwork.mobile.rakuten.co.jp%252F", aff:true, pixel:"https://www12.a8.net/0.gif?a8mat=4BESUB+5XQMYA+2HOM+BW8O1" },
   { id:"uq", name:"UQ mobile トクトクプラン2", kind:"subbrand",
     price(gb){ if(gb<=5) return {fee:2948,cap:5}; if(gb<=30) return {fee:4048,cap:30}; return null; },
     callAdd(){ return 0; },
@@ -514,11 +514,11 @@ document.getElementById("runBtn").addEventListener("click", ()=>{
       else html += `<p>いまの料金とほぼ同等か、条件次第では高くなります。無理な乗り換えはおすすめしません。</p>`;
     }
     html += `<p>${top.plan.why}。${top.plan.callNote}。</p>
-      <a class="officialBtn" href="${top.plan.url}">公式サイトで最新の料金を確認する ↗</a></div>`;
+      <a class="officialBtn" href="${top.plan.url}"${top.plan.aff?' rel="nofollow sponsored"':""}>公式サイトで最新の料金を確認する ↗</a>${top.plan.aff?`<p style="font-size:11px;opacity:.85;margin:8px 0 0">※このリンクはアフィリエイト広告リンクです（PR）。おすすめの順番は料金計算の結果で決めています。</p>`:""}${top.plan.pixel?`<img src="${top.plan.pixel}" width="1" height="1" alt="" style="border:0">`:""}</div>`;
 
     if(cands.length>1){
       const alt=cands[1];
-      html += `<div class="card2"><h3>次点の候補</h3><p style="margin:0"><strong>${alt.plan.name}${alt.planName?`（${alt.planName}）`:""} ― 月 ${yen(alt.total)}</strong><br><span style="font-size:14px">${alt.plan.why}。${alt.plan.callNote}。</span></p><a class="altLink" href="${alt.plan.url}">公式サイトを開く ↗</a></div>`;
+      html += `<div class="card2"><h3>次点の候補</h3><p style="margin:0"><strong>${alt.plan.name}${alt.planName?`（${alt.planName}）`:""} ― 月 ${yen(alt.total)}</strong><br><span style="font-size:14px">${alt.plan.why}。${alt.plan.callNote}。</span></p><a class="altLink" href="${alt.plan.url}"${alt.plan.aff?' rel="nofollow sponsored"':""}>公式サイトを開く ↗</a>${alt.plan.pixel?`<img src="${alt.plan.pixel}" width="1" height="1" alt="" style="border:0">`:""}</div>`;
     }
     if(prio==="mail" || state.pitfalls.has("mail")){
       html += `<div class="note-card"><h4>📧 キャリアメールについて</h4><p>おすすめ先では今のキャリアメールはそのまま使えません。残す場合は元のキャリアの「持ち運び」サービス（有料・月額制）の申込が別途必要です。まず登録先の洗い出しから始めてください。</p></div>`;
