@@ -400,7 +400,7 @@ const PLANS = [
     callAdd(){ return 0; },
     callNote:"店舗サポートあり。通話定額オプション料は含んでいないため、店舗・公式で確認を（Lは10分定額込み）",
     why:"ソフトバンクのサブブランドで、店舗でも相談できる",
-    url:"https://www.ymobile.jp/" }
+    url:"https://px.a8.net/svt/ejp?a8mat=4BESUC+354DPU+424K+BWVTE", aff:true, agency:true, pixel:"https://www12.a8.net/0.gif?a8mat=4BESUC+354DPU+424K+BWVTE" }
 ];
 
 const PITFALL_NOTES = {
@@ -638,11 +638,11 @@ document.getElementById("runBtn").addEventListener("click", ()=>{
       else html += `<p>いまの料金とほぼ同等か、条件次第では高くなります。無理な乗り換えはおすすめしません。</p>`;
     }
     html += `<p>${top.plan.why}。${top.plan.callNote}。</p>
-      <a class="officialBtn" href="${top.plan.url}"${top.plan.aff?' rel="nofollow sponsored"':""}>公式サイトで最新の料金を確認する ↗</a>${top.plan.aff?`<p style="font-size:11px;opacity:.85;margin:8px 0 0">※このリンクはアフィリエイト広告リンクです（PR）。おすすめの順番は料金計算の結果で決めています。</p>`:""}${top.plan.pixel?`<img src="${top.plan.pixel}" width="1" height="1" alt="" style="border:0">`:""}</div>`;
+      <a class="officialBtn" href="${top.plan.url}"${top.plan.aff?' rel="nofollow sponsored"':""}>${top.plan.agency?"申込サイト":"公式サイト"}で最新の料金を確認する ↗</a>${top.plan.aff?`<p style="font-size:11px;opacity:.85;margin:8px 0 0">※このリンクはアフィリエイト広告リンクです（PR）。おすすめの順番は料金計算の結果で決めています。</p>`:""}${top.plan.pixel?`<img src="${top.plan.pixel}" width="1" height="1" alt="" style="border:0">`:""}</div>`;
 
     if(cands.length>1){
       const alt=cands[1];
-      html += `<div class="card2"><h3>次点の候補</h3><p style="margin:0"><strong>${alt.plan.name}${alt.planName?`（${alt.planName}）`:""} ― 月 ${yen(alt.total)}</strong><br><span style="font-size:14px">${alt.plan.why}。${alt.plan.callNote}。</span></p><a class="altLink" href="${alt.plan.url}"${alt.plan.aff?' rel="nofollow sponsored"':""}>公式サイトを開く ↗</a>${alt.plan.pixel?`<img src="${alt.plan.pixel}" width="1" height="1" alt="" style="border:0">`:""}</div>`;
+      html += `<div class="card2"><h3>次点の候補</h3><p style="margin:0"><strong>${alt.plan.name}${alt.planName?`（${alt.planName}）`:""} ― 月 ${yen(alt.total)}</strong><br><span style="font-size:14px">${alt.plan.why}。${alt.plan.callNote}。</span></p><a class="altLink" href="${alt.plan.url}"${alt.plan.aff?' rel="nofollow sponsored"':""}>${alt.plan.agency?"申込サイト":"公式サイト"}を開く ↗</a>${alt.plan.pixel?`<img src="${alt.plan.pixel}" width="1" height="1" alt="" style="border:0">`:""}</div>`;
     }
     if(prio==="mail" || state.pitfalls.has("mail")){
       html += `<div class="note-card"><h4>📧 キャリアメールについて</h4><p>おすすめ先では今のキャリアメールはそのまま使えません。残す場合は元のキャリアの「持ち運び」サービス（有料・月額制）の申込が別途必要です。まず登録先の洗い出しから始めてください。</p></div>`;
