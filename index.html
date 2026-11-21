@@ -322,8 +322,8 @@
   </section>
 
   <p class="foot">
-    料金は2026年10月に公開情報で確認した税込・割引前の基本料金です（販売前に各社公式で再確認します）。キャンペーン価格は含みません。節約額は目安で、保証するものではありません。申込前に必ず各社の公式サイトで最新の料金と条件を確認してください。本ページにはアフィリエイト広告リンクが含まれます。リンク経由で申し込みが完了すると、運営者に報酬が支払われる場合があります。おすすめの順番は料金計算の結果のみで決めており、報酬の有無で変えていません。<br>
-    ahamoは2026年12月1日から段階制（〜40GB 3,135円／〜60GB 4,125円／〜120GB 5,115円）に改定予定のため、このツールのahamo料金は改定前のものです。
+    料金は2026年11月に公開情報で確認した税込・割引前の基本料金です。キャンペーン価格は含みません。節約額は目安で、保証するものではありません。申込前に必ず各社の公式サイトで最新の料金と条件を確認してください。本ページにはアフィリエイト広告リンクが含まれます。リンク経由で申し込みが完了すると、運営者に報酬が支払われる場合があります。おすすめの順番は料金計算の結果のみで決めており、報酬の有無で変えていません。<br>
+    ahamoとドコモ mini2は、2026年12月1日からの新料金で計算しています（ahamoは〜40GB 3,135円／〜60GB 4,125円／〜120GB 5,115円の段階制。11月30日まではahamoの旧料金が適用され、mini2は提供前です）。
   </p>
 
 </div>
@@ -349,7 +349,7 @@ const APPS = [
 
 const HOURS = {none:0, some:5, many:15};
 
-/* ===== プランDB（2026年10月確認・税込・割引前） =====
+/* ===== プランDB（2026年11月確認・税込・割引前） =====
    price(gb): その容量が収まる月額基本料。収まらなければ null
    callAdd(level, gb): 通話の目安加算。null は候補から外す */
 const PLANS = [
@@ -360,7 +360,7 @@ const PLANS = [
     why:"容量の刻みが細かく、ムダのないプランを選びやすい格安SIM",
     url:"https://www.iijmio.jp/" },
   { id:"mineo", name:"mineo マイピタ", kind:"mvno",
-    price(gb){ const t=[[1,1298],[5,1518],[10,1958],[20,2178],[50,2948]]; for(const [c,p] of t){ if(gb<=c) return {fee:p, cap:c}; } return null; },
+    price(gb){ const t=[[3,1298],[7,1518],[15,1958],[30,2178],[50,2948]]; for(const [c,p] of t){ if(gb<=c) return {fee:p, cap:c}; } return null; },
     callAdd(lv){ return lv==="many"? null : 0; },
     callNote:"専用アプリ利用で通話料が割引。電話をよくかける人は別途定額の確認を",
     why:"ドコモ・au・ソフトバンクの3回線から選べる格安SIM",
@@ -384,11 +384,17 @@ const PLANS = [
     why:"使う月だけ買う方式。月ごとの使用量に波がある人向き",
     url:"https://povo.jp/" },
   { id:"ahamo", name:"ahamo", kind:"online",
-    price(gb){ if(gb<=30) return {fee:2970,cap:30}; if(gb<=110) return {fee:4950,cap:110,plan:"大盛り"}; return null; },
+    price(gb){ if(gb<=40) return {fee:3135,cap:40}; if(gb<=60) return {fee:4125,cap:60}; if(gb<=120) return {fee:5115,cap:120}; return null; },
     callAdd(lv){ return lv==="many"?1100:0; },
-    callNote:"5分以内の国内通話は標準で無料。★2026年12月1日から段階制に改定予定（本文下部の注記参照）",
-    why:"ドコモ回線そのまま、30GBまで一律料金のシンプルさ",
+    callNote:"5分以内の国内通話は標準で無料。2026年12月1日から、使った量で決まる3段階制",
+    why:"ドコモ回線そのまま、段階制でムダが出にくい",
     url:"https://ahamo.com/" },
+  { id:"docomo_mini2", name:"ドコモ mini2", kind:"carrier",
+    price(gb){ if(gb<=6) return {fee:3278,cap:6}; if(gb<=12) return {fee:4598,cap:12}; return null; },
+    callAdd(lv){ return lv==="many"?1980 : lv==="some"?880 : 0; },
+    callNote:"家族間（ファミリー割引グループ内）の国内通話は無料。通話オプションは5分定額880円／かけ放題1,980円。2026年12月1日提供開始",
+    why:"ドコモの小容量プラン。2回線以上でみんなドコモ割（月550円引き）が付く",
+    url:"https://www.docomo.ne.jp/" },
   { id:"rakuten", name:"楽天モバイル Rakuten最強プラン", kind:"carrier",
     price(gb){ if(gb<=3) return {fee:1078,cap:3}; if(gb<=20) return {fee:2178,cap:20}; return {fee:3278,cap:Infinity}; },
     callAdd(){ return 0; },
@@ -398,13 +404,13 @@ const PLANS = [
   { id:"uq", name:"UQ mobile トクトクプラン2", kind:"subbrand",
     price(gb){ if(gb<=5) return {fee:2948,cap:5}; if(gb<=30) return {fee:4048,cap:30}; return null; },
     callAdd(){ return 0; },
-    callNote:"店舗サポートあり。通話定額オプション料は含んでいないため、店舗・公式で確認を",
+    callNote:"店舗サポートあり。通話定額オプション料は含んでいないため、店舗・公式で確認を。5〜18歳の家族には親子応援割（月1,100円×12か月）あり（コミコミプランバリューも対象）",
     why:"auのサブブランドで、店舗でも相談できる",
     url:"https://www.uqwimax.jp/mobile/" },
   { id:"ymobile", name:"ワイモバイル シンプル3", kind:"subbrand",
     price(gb){ if(gb<=5) return {fee:3278,cap:5,plan:"S"}; if(gb<=30) return {fee:4378,cap:30,plan:"M"}; if(gb<=35) return {fee:5478,cap:35,plan:"L（10分定額込み）"}; return null; },
     callAdd(){ return 0; },
-    callNote:"店舗サポートあり。通話定額オプション料は含んでいないため、店舗・公式で確認を（Lは10分定額込み）",
+    callNote:"店舗サポートあり。通話定額オプション料は含んでいないため、店舗・公式で確認を（Lは10分定額込み）。5〜18歳の家族には親子割（月1,100円×12か月、シンプル3 M/Lが対象）あり",
     why:"ソフトバンクのサブブランドで、店舗でも相談できる",
     url:"https://px.a8.net/svt/ejp?a8mat=4BESUC+354DPU+424K+BWVTE", aff:true, agency:true, pixel:"https://www12.a8.net/0.gif?a8mat=4BESUC+354DPU+424K+BWVTE" }
 ];
@@ -555,7 +561,7 @@ const HIKARI = [
   { id:"softbank", name:"ソフトバンク光", house:5720, mansion:4180, option:550, url:"https://www.softbank.jp/internet/sbhikari/",
     pair:{ ymobile:{S:1100,M:1650,L:1650} }, pairNote:"おうち割 光セット（ワイモバイル：プランにより月1,100〜1,650円）。適用には指定オプション月550円が必要です", area:"全国（フレッツ光の提供エリア）" },
   { id:"docomo", name:"ドコモ光", house:5720, mansion:4400, option:0, url:"https://www.docomo.ne.jp/internet/hikari/",
-    pair:{}, pairNote:"ドコモの対象プラン向けのセット割があります（ahamoは対象外）", area:"全国（フレッツ光の提供エリア）" },
+    pair:{ docomo_mini2:1210 }, pairNote:"ドコモ光セット割（ドコモ mini2：月1,210円）。ahamoは対象外です", area:"全国（フレッツ光の提供エリア）" },
   { id:"ahamo_hikari", name:"ahamo光", house:4950, mansion:3630, option:0, url:"https://px.a8.net/svt/ejp?a8mat=4BGAUW+2UEKTU+3SPO+CKJSMQ", aff:true, pixel:"https://www13.a8.net/0.gif?a8mat=4BGAUW+2UEKTU+3SPO+CKJSMQ", onlyPlan:"ahamo",
     pair:{}, pairNote:"ahamo契約者専用の光回線。セット割はありませんが月額が安めです", area:"全国（フレッツ光の提供エリア）" },
   { id:"au", name:"auひかり", house:5610, mansion:4180, option:0, url:"https://px.a8.net/svt/ejp?a8mat=4BGAUW+2VLG1E+42Y0+5YRHE", aff:true, pixel:"https://www17.a8.net/0.gif?a8mat=4BGAUW+2VLG1E+42Y0+5YRHE",
@@ -573,8 +579,8 @@ const ROUTERS = [
     pairNote:"自宅セット割（UQ mobile：月1,100円）の対象です。持ち運びもできます", area:"WiMAX +5Gのエリア内。月額は26か月目以降4,950円です" },
   { id:"rakuten_turbo", name:"楽天Turbo", fee:4840, url:"https://network.mobile.rakuten.co.jp/", pair:{},
     pairNote:"楽天モバイルと相性がよい置くだけWi-Fiです（セット割はありません）", area:"楽天モバイルのエリア内" },
-  { id:"home5g", name:"ドコモ home 5G", fee:4950, url:"https://www.docomo.ne.jp/home_5g/", pair:{},
-    pairNote:"ドコモの置くだけWi-Fiです（ahamoはセット割の対象外）", area:"ドコモのエリア内" },
+  { id:"home5g", name:"ドコモ home 5G", fee:4950, url:"https://www.docomo.ne.jp/home_5g/", pair:{ docomo_mini2:1210 },
+    pairNote:"ドコモの置くだけWi-Fiです。home 5G セット割（ドコモ mini2：月1,210円）の対象です（ahamoは対象外）", area:"ドコモのエリア内" },
   { id:"softbank_air", name:"ソフトバンクエアー", fee:5368, url:"https://www.softbank.jp/internet/air/", pair:{ ymobile:{S:1100,M:1650,L:1650} },
     pairNote:"おうち割 光セット（ワイモバイル：プランにより月1,100〜1,650円）の対象です", area:"ソフトバンクのエリア内" },
 ];
